@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/AnswerZDev/AnswerZ-server/issues"
   },
-  "homepage": "https://github.com/AnswerZDev/AnswerZ-server#readme"
+  "homepage": "https://github.com/AnswerZDev/AnswerZ-server#readme",
+  "dependencies": {
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0"
+  }
 }

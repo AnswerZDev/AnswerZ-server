@@ -1,15 +1,11 @@
-const http = require('http')
-const port = 3000
+const express = require('express');
+const app = express();
+const port = 3000;
 
-const server = http.createServer(function(req, res){
-    res.write('Test server')
-    res.end()
-})
+app.get('/', (req, res) =>{
+    res.send('Answerz API');
+});
 
-server.listen(port, function(error){
-    if(error){
-        console.log('Something went wrong..., ', error)
-    }else{
-        console.log('Server listening on port ' + port)
-    }
-})
+app.listen(port, () => {
+    console.log(`Server Express listening on port ${port}`);
+});

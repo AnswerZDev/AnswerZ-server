@@ -9,7 +9,11 @@ const options = {
             version: '1.0.0',
             description: 'Documentation for Answerz API',
         },
-        basePath: '/',
+        servers:[
+            {
+                url: 'http://localhost:3000'
+            }
+        ]
     },
     apis: [__dirname + '/index.js'],
 };

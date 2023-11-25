@@ -9,14 +9,15 @@ import {
   getAuth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { getIdToken } from "@firebase/auth";
-import { ConfigService } from "@nestjs/config";
+import { ForgotPasswordUserDto } from '../dto/forgot-password-user.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private configService: ConfigService) {}
+  constructor() {}
 
   private _firebaseConfig = {
     apiKey: process.env.API_KEY,
@@ -50,6 +51,18 @@ export class AuthService {
       return { token };
     } catch (error) {
       throw new UnauthorizedException("Invalid credentials");
+    }
+  }
+
+  async forgotPassword(forgotPasswordDto: ForgotPasswordUserDto) {
+    const { email } = forgotPasswordDto;
+    const app = initializeApp(this._firebaseConfig);
+    try {
+      const auth = getAuth(app);
+      await sendPasswordResetEmail(auth, email);
+      // TODO() => modifier pour personalisé la modif des info de l'utilisateur en base
+    } catch (error) {
+      throw new InternalServerErrorException("Error while reset user password");
     }
   }
 }

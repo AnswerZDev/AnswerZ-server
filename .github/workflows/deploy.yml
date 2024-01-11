@@ -1,0 +1,25 @@
+on:
+  push:
+    branches:
+      - setup-bdd
+  workflow_dispatch:
+
+jobs:
+  run_pull:
+    name: run pull
+    runs-on: ubuntu-latest
+
+    steps:
+    
+    - name: Install ssh keys
+      run: |
+        install -m 600 -D /dev/null ~/.ssh/id_rsa
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: database deploy
+      run: |
+        ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "bash -s" < $GITHUB_WORKSPACE/.github/workflows/scripts/database_deploy.sh "${{ secrets.DATABASE_CONTAINER_NAME }} ${{ secrets.DATABASE_TYPE }} ${{ secrets.DATABASE_HOST }} ${{ secrets.DATABASE_PORT }} ${{ secrets.DATABASE_USER }} ${{ secrets.DATABASE_PASSWORD }} ${{ secrets.DATABASE_NAME }} ${{ secrets.DATABASE_RETRY_ATTEMPTS }}"

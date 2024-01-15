@@ -9,4 +9,6 @@ import { User } from "../entities/User.entity";
   controllers: [UsersController],
   providers: [UsersService],
 })
-export class UsersModule {}
+export class UsersModule {
+
+}

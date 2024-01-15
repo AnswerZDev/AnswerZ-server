@@ -1,6 +1,7 @@
 import {
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
 import { SignupUserDto } from "../dto/signup-user.dto";
@@ -14,7 +15,7 @@ import {
 import { initializeApp } from "firebase/app";
 import { getIdToken } from "@firebase/auth";
 import { ForgotPasswordUserDto } from "../dto/forgot-password-user.dto";
-import { FirebaseError } from "firebase-admin/lib/utils/error";
+import { InvalidEmailException } from "../exception/invalid-email.exception";
 
 @Injectable()
 export class AuthService {
@@ -50,13 +51,23 @@ export class AuthService {
       // Génére un token JWT pour l'utilisateur et le retourne au format JSON
       const token = await getIdToken(user);
       return { token };
-    } catch (error) {
-      if (error instanceof FirebaseError && error.authErrorInfo) {
-        // Ici, vous pouvez traiter l'erreur comme une erreur d'identification.
-        throw new UnauthorizedException("Invalid credentials");
-      } else {
-        // Pour les autres types d'erreurs, vous pouvez retourner une erreur serveur.
-        throw new InternalServerErrorException("Error while login user");
+    } catch (error: any) {
+      switch (error.code) {
+        case "auth/invalid-email":
+          throw new InvalidEmailException("Invalid Email");
+          break;
+        case "auth/user-disabled":
+          throw new InternalServerErrorException("User disabled");
+          break;
+        case "auth/user-not-found":
+          throw new NotFoundException("User not found");
+          break;
+        case "auth/wrong-password":
+          throw new UnauthorizedException("Invalid credentials");
+          break;
+        default:
+          throw new InternalServerErrorException("Error while login user");
+          break;
       }
     }
   }

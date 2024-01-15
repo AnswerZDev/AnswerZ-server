@@ -13,7 +13,8 @@ import {
 } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { getIdToken } from "@firebase/auth";
-import { ForgotPasswordUserDto } from '../dto/forgot-password-user.dto';
+import { ForgotPasswordUserDto } from "../dto/forgot-password-user.dto";
+import { FirebaseError } from "firebase-admin/lib/utils/error";
 
 @Injectable()
 export class AuthService {
@@ -50,7 +51,13 @@ export class AuthService {
       const token = await getIdToken(user);
       return { token };
     } catch (error) {
-      throw new UnauthorizedException("Invalid credentials");
+      if (error instanceof FirebaseError && error.authErrorInfo) {
+        // Ici, vous pouvez traiter l'erreur comme une erreur d'identification.
+        throw new UnauthorizedException("Invalid credentials");
+      } else {
+        // Pour les autres types d'erreurs, vous pouvez retourner une erreur serveur.
+        throw new InternalServerErrorException("Error while login user");
+      }
     }
   }
 

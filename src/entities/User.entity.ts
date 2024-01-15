@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany } from "typeorm";
 import { Cardset } from "./Cardset.entity";
 import { AccessControl } from "./AccessControl.entity";
+import {Role} from "../enum/role.enum";
 
 @Entity()
 export class User {
@@ -42,6 +43,6 @@ export class User {
   }
 
   public getRoles(): string[] {
-    return ["ROLE_USER"];
+    return [Role.USER];
   }
 }

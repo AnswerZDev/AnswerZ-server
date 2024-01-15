@@ -7,11 +7,23 @@ import { AuthController } from "./auth/auth.controller";
 import { AuthModule } from "./auth/auth.module";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { CardsetController } from "./cardset/cardset.controller";
+import { CardsetModule } from "./cardset/cardset.module";
+import { FlashcardModule } from "./flashcard/flashcard.module";
+import { FlashcardController } from "./flashcard/flashcard.controller";
+import { AnswerModule } from "./answer/answer.module";
+import { AnswerController } from "./answer/answer.controller";
+import { AccessControlModule } from "./access-control/access-control.module";
+import { AccessControlController } from "./access-control/access-control.controller";
 
 @Module({
   imports: [
     UsersModule,
     AuthModule,
+    CardsetModule,
+    FlashcardModule,
+    AnswerModule,
+    AccessControlModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -27,7 +39,15 @@ import { TypeOrmModule } from "@nestjs/typeorm";
       retryAttempts: parseInt(process.env.DATABASE_RETRY_ATTEMPTS),
     }),
   ],
-  controllers: [AppController, UsersController, AuthController],
+  controllers: [
+    AppController,
+    UsersController,
+    AuthController,
+    CardsetController,
+    FlashcardController,
+    AnswerController,
+    AccessControlController,
+  ],
   providers: [AppService],
 })
 export class AppModule {}

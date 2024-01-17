@@ -6,7 +6,6 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Cardset } from "./Cardset.entity";
-import {Answer} from "./Answer.entity";
 
 @Entity()
 export class Flashcard {
@@ -20,8 +19,8 @@ export class Flashcard {
   @Column({ name: "Question", length: 255 })
   private question: string;
 
-  @OneToMany(() => Answer, "flashcard")
-  private answers: Answer[];
+  @Column({ name: "Answer", length: 255 })
+  private answer: string;
 
   constructor(flashcard: Partial<Flashcard>) {
     Object.assign(this, flashcard);
@@ -49,5 +48,13 @@ export class Flashcard {
 
   public setQuestion(question: string): void {
     this.question = question;
+  }
+
+  public getAnswer(): string {
+    return this.answer;
+  }
+
+  public setAnswer(answer: string): void {
+    this.answer = answer;
   }
 }

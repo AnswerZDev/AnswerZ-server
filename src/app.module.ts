@@ -1,20 +1,13 @@
 import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { UsersController } from "./users/users.controller";
 import { UsersModule } from "./users/users.module";
-import { AuthController } from "./auth/auth.controller";
 import { AuthModule } from "./auth/auth.module";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { CardsetController } from "./cardset/cardset.controller";
 import { CardsetModule } from "./cardset/cardset.module";
 import { FlashcardModule } from "./flashcard/flashcard.module";
-import { FlashcardController } from "./flashcard/flashcard.controller";
-import { AnswerModule } from "./answer/answer.module";
-import { AnswerController } from "./answer/answer.controller";
 import { AccessControlModule } from "./access-control/access-control.module";
-import { AccessControlController } from "./access-control/access-control.controller";
 
 @Module({
   imports: [
@@ -22,7 +15,6 @@ import { AccessControlController } from "./access-control/access-control.control
     AuthModule,
     CardsetModule,
     FlashcardModule,
-    AnswerModule,
     AccessControlModule,
     ConfigModule.forRoot({
       isGlobal: true,
@@ -41,12 +33,6 @@ import { AccessControlController } from "./access-control/access-control.control
   ],
   controllers: [
     AppController,
-    UsersController,
-    AuthController,
-    CardsetController,
-    FlashcardController,
-    AnswerController,
-    AccessControlController,
   ],
   providers: [AppService],
 })

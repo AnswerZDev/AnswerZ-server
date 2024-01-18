@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany } from "typeorm";
+import {Column, Entity, JoinColumn, OneToMany} from "typeorm";
 import { Cardset } from "./Cardset.entity";
 import { AccessControl } from "./AccessControl.entity";
 import {Role} from "../enum/role.enum";
@@ -13,10 +13,6 @@ export class User {
 
   @OneToMany(() => Cardset, "user")
   private accessControls: AccessControl[];
-
-  constructor(user: Partial<User>) {
-    Object.assign(this, user);
-  }
 
   public getId(): string {
     return this.id;

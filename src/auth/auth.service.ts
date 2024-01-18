@@ -1,11 +1,12 @@
 import {
+  forwardRef, Inject,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { SignupUserDto } from "../dto/signup-user.dto";
-import { LoginUserDto } from "../dto/login-user.dto";
+import { SignupUserDto } from "./dto/signup-user.dto";
+import { LoginUserDto } from "./dto/login-user.dto";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -14,25 +15,54 @@ import {
 } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { getIdToken } from "@firebase/auth";
-import { ForgotPasswordUserDto } from "../dto/forgot-password-user.dto";
+import { ForgotPasswordUserDto } from "./dto/forgot-password-user.dto";
 import { InvalidEmailException } from "../exception/invalid-email.exception";
+import {UsersService} from "../users/users.service";
+import firebase from "firebase/compat";
+import UserCredential = firebase.auth.UserCredential;
+import {User} from "../entities/User.entity";
 
 @Injectable()
 export class AuthService {
-  constructor() {}
+  constructor(
+      private readonly usersService: UsersService,
+  ) {}
 
   private _firebaseConfig = {
     apiKey: process.env.API_KEY,
   };
+
   async signup(signUpDto: SignupUserDto) {
     const { email, password } = signUpDto;
     const app = initializeApp(this._firebaseConfig);
     try {
       const auth = getAuth(app);
-      await createUserWithEmailAndPassword(auth, email, password);
-      // TODO() => modifier pour personalisé l'ajout du firebase ID en BASE + info de signupDto
-    } catch (error) {
-      throw new InternalServerErrorException("Error while creating user");
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      if(userCredential.user && userCredential.user.uid) {
+        // TODO() => voir si on fait une verif par email
+        let newUser: User = new User();
+        newUser.setId(userCredential.user.uid);
+        await this.usersService.createUser(newUser);
+      }
+      return userCredential;
+    } catch (error: any) {
+      switch (error.code) {
+        case "auth/invalid-email":
+          throw new InvalidEmailException("Le format de l'email est invalide");
+          break;
+        case "auth/email-already-in-use":
+          throw new InvalidEmailException("Adresse email déjà utilisée");
+          break;
+        case "auth/operation-not-allowed":
+          throw new InternalServerErrorException("Opération non autorisée");
+          break;
+        case "auth/weak-password":
+          throw new InternalServerErrorException("Mot de passe trop faible");
+          break;
+        default:
+          throw new InternalServerErrorException("Une erreur est survenue pendant la création de l'utilisateur");
+          break;
+      }
     }
   }
 
@@ -54,19 +84,19 @@ export class AuthService {
     } catch (error: any) {
       switch (error.code) {
         case "auth/invalid-email":
-          throw new InvalidEmailException("Invalid Email");
+          throw new InvalidEmailException("Le format de l'email est invalide");
           break;
         case "auth/user-disabled":
-          throw new InternalServerErrorException("User disabled");
+          throw new InternalServerErrorException("Utilisateur désactivé");
           break;
         case "auth/user-not-found":
-          throw new NotFoundException("User not found");
+          throw new NotFoundException("Utilisateur non trouvé");
           break;
         case "auth/wrong-password":
-          throw new UnauthorizedException("Invalid credentials");
+          throw new UnauthorizedException("Identifiants ou mot de passe introuvable");
           break;
         default:
-          throw new InternalServerErrorException("Error while login user");
+          throw new InternalServerErrorException("Une erreur est survenue pendant la connexion");
           break;
       }
     }

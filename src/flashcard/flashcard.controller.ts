@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Param, Put } from "@nestjs/common";
-import { Post } from "@nestjs/common/decorators";
+import { Delete, Post } from "@nestjs/common/decorators";
 import { ApiTags } from "@nestjs/swagger";
 import { FlashcardService } from "../flashcard/flashcard.service";
 
@@ -24,7 +24,7 @@ export class FlashcardController {
       const datas = await this.flashcardService.createOrUpdate(data);
       return datas;
     } catch (error) {
-      throw new HttpException('Error data not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Error creating flashcard', HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -34,7 +34,17 @@ export class FlashcardController {
       const datas = await this.flashcardService.createOrUpdate(data, id);
       return datas;
     } catch (error) {
-      throw new HttpException('Error data not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Flashcard with ID ${id} not found', HttpStatus.NOT_FOUND);
+    }
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: number) {
+    try {
+      const datas = await this.flashcardService.delete(id);
+      return datas;
+    } catch (error) {
+      throw new HttpException('Flashcard with ID ${id} not found', HttpStatus.NOT_FOUND);
     }
   }
 }

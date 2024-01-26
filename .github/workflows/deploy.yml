@@ -1,9 +1,9 @@
 on:
   push:
     branches:
-      - setup-bdd
+      - main
   workflow_dispatch:
-
+  
 jobs:
   run_pull:
     name: run pull
@@ -20,6 +20,20 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: env_file deploy
+      run: |
+        ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "bash -s" < $GITHUB_WORKSPACE/.github/workflows/scripts/deploy_env_file.sh "${{ secrets.DATABASE_CONTAINER_NAME }} ${{ secrets.DATABASE_TYPE }} ${{ secrets.DATABASE_HOST }} ${{ secrets.DATABASE_PORT }} ${{ secrets.DATABASE_USER }} ${{ secrets.DATABASE_PASSWORD }} ${{ secrets.DATABASE_NAME }} ${{ secrets.DATABASE_RETRY_ATTEMPTS }}"
+    
     - name: database deploy
       run: |
-        ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "bash -s" < $GITHUB_WORKSPACE/.github/workflows/scripts/database_deploy.sh "${{ secrets.DATABASE_CONTAINER_NAME }} ${{ secrets.DATABASE_TYPE }} ${{ secrets.DATABASE_HOST }} ${{ secrets.DATABASE_PORT }} ${{ secrets.DATABASE_USER }} ${{ secrets.DATABASE_PASSWORD }} ${{ secrets.DATABASE_NAME }} ${{ secrets.DATABASE_RETRY_ATTEMPTS }}"
+        commit_message=$(git log --format=%B -n 1 $GITHUB_SHA)
+        if [[ "$commit_message" != "init db"* ]]; then
+          echo "Deployment not triggered. Commit message does not start with 'init db'."
+          exit 0
+        else
+          ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "bash -s" < $GITHUB_WORKSPACE/.github/workflows/scripts/database_deploy.sh "${{ secrets.DATABASE_CONTAINER_NAME }}"
+        fi
+
+    - name:  api deploy
+      run: |
+          ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} 'bash -s' < $GITHUB_WORKSPACE/.github/workflows/scripts/deploy_api.sh

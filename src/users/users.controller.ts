@@ -11,9 +11,10 @@ export class UsersController {
   ) {}
 
   @Get("me")
-  currentUser(@Req() req) {
+  async currentUser(@Req() req) {
     try {
-        const user = this.userService.findUserById(req.user.uid);
+        const user = await this.userService.findUserById(req.user.uid);
+        if(!user) throw new InternalServerErrorException("Utilisateur introuvable");
         return user;
     } catch (error) {
         throw new InternalServerErrorException("Error while getting user");

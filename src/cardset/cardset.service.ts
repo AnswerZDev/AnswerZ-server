@@ -19,9 +19,11 @@ export class CardsetService {
     }
 
     async getOneCardset(my_id: number) : Promise<Cardset | null> {
-        return await this.carSetRepository.findOne({where: {id: my_id}});
+        return await this.carSetRepository.findOne({where: {id: my_id}, 
+            relations: {
+                flashcards: true,
+            }, });
     }
 
-    
 
 }

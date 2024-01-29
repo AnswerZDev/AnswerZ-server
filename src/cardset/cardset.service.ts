@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { identity } from "rxjs";
 import { Cardset } from "src/entities/Cardset.entity";
 import { Repository } from "typeorm";
 
@@ -16,5 +17,11 @@ export class CardsetService {
     async getAllCardset() : Promise<Cardset[]> {
         return await this.carSetRepository.find();
     }
+
+    async getOneCardset(my_id: number) : Promise<Cardset | null> {
+        return await this.carSetRepository.findOne({where: {id: my_id}});
+    }
+
+    
 
 }

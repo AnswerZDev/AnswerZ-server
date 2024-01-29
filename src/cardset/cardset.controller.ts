@@ -17,5 +17,16 @@ export class CardsetController {
     }
   }
 
+  @Get('/one')
+  async getOne() {
+    try {
+      const datas = await this.cardset_service.getOneCardset(4);
+      return datas;
+    } catch (error) {
+      throw new HttpException('Error data not found', HttpStatus.NOT_FOUND);
+    }
+  }
+
+
 
 }

@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   Column,
   Entity,
   JoinColumn,
@@ -13,7 +14,7 @@ import { AccessControl } from "./AccessControl.entity";
 @Entity()
 export class Cardset {
   @PrimaryGeneratedColumn({ name: "CardSetId" })
-  private id: number;
+  public id: number;
 
   @ManyToOne(() => User, "cardsets")
   @JoinColumn({ name: "authorId", referencedColumnName: "id" })

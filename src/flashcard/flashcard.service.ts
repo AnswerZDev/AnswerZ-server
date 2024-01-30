@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Flashcard } from "src/entities/Flashcard.entity";
-import { DeleteResult, Repository } from "typeorm";
+import { DeleteResult, FindOneOptions, Repository } from "typeorm";
 
 @Injectable()
 export class FlashcardService {
@@ -14,10 +14,11 @@ export class FlashcardService {
         return await this.flashcardRepository.find();
     }
 
+    async getFlashcardById(id: number): Promise<Flashcard> {
+        return await this.flashcardRepository.findOne({ where: { id: id } } as FindOneOptions<Flashcard>);
+    }
+
     async createOrUpdate(data: any, id?: number): Promise<any> {
-        if(id !== undefined && data.id !== id) {
-            data.id = Number(id);
-        }
         const datas = await this.flashcardRepository.save(data);
         return datas;
     }

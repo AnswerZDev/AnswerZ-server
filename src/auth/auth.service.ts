@@ -21,6 +21,8 @@ import {UsersService} from "../users/users.service";
 import firebase from "firebase/compat";
 import UserCredential = firebase.auth.UserCredential;
 import {User} from "../entities/User.entity";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
+
 
 @Injectable()
 export class AuthService {

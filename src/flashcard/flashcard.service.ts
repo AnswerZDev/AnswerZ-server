@@ -18,6 +18,17 @@ export class FlashcardService {
         return await this.flashcardRepository.findOne({ where: { id: id } } as FindOneOptions<Flashcard>);
     }
 
+
+    async getAllFlashcardByCardsetId(cardsetId: number): Promise<Flashcard[]> {
+        const query: FindOneOptions<Flashcard> = {
+          where: { cardset: { id: cardsetId } } as any,
+          // relations: ['cardset'], ADD IF you need to have Cardset Infos
+        };
+    
+        return await this.flashcardRepository.find(query);
+    }
+
+
     async createOrUpdate(data: any, id?: number): Promise<any> {
         const datas = await this.flashcardRepository.save(data);
         return datas;

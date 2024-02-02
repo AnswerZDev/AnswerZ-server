@@ -36,7 +36,7 @@ export class FlashcardController {
       const datas = await this.flashcardService.getAllFlashcardByCardsetId(CardSetId);
       return datas;
     } catch (error) {
-      throw new HttpException('Flashcard with Cardset ID ${id} not found', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Flashcard with Cardset ID ${CardSetId} not found', HttpStatus.BAD_REQUEST);
     }
   }
 

@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Flashcard } from "src/entities/Flashcard.entity";
-import { DeleteResult, FindOneOptions, Repository } from "typeorm";
+import { DeleteResult, FindManyOptions, FindOneOptions, FindOptions, FindOptionsWhere, Repository } from "typeorm";
 
 @Injectable()
 export class FlashcardService {
@@ -20,13 +20,10 @@ export class FlashcardService {
 
 
     async getAllFlashcardByCardsetId(cardsetId: number): Promise<Flashcard[]> {
-        const query: FindOneOptions<Flashcard> = {
-          where: { cardset: { id: cardsetId } } as any,
-          // relations: ['cardset'], ADD IF you need to have Cardset Infos
-        };
-    
-        return await this.flashcardRepository.find(query);
+        return await this.flashcardRepository.find({where: {cardset: {id: cardsetId}}} as FindManyOptions<Flashcard>);
+        
     }
+
 
 
     async createOrUpdate(data: any, id?: number): Promise<any> {

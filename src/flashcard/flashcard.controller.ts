@@ -18,7 +18,6 @@ export class FlashcardController {
     }
   }
 
-  /*
   @Get(':id')
   async getFlashcardById(@Param('id') id: number) {
     try {
@@ -28,9 +27,8 @@ export class FlashcardController {
       throw new HttpException('Flashcard with ID ${id} not found', HttpStatus.BAD_REQUEST);
     }
   }
-*/
 
-  @Get(':CardSetId')
+  @Get('/cardset/:CardSetId')
   async getAllFlashcardByCardsetId(@Param('CardSetId') CardSetId: number) {
     try {
       const datas = await this.flashcardService.getAllFlashcardByCardsetId(CardSetId);

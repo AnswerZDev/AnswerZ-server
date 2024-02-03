@@ -15,10 +15,14 @@ export class RoomService {
     
   }
 
+
+
   /*
   * Following functions are here to manage rooms informations so there are static and use in debug class to display infos
   */
 
+
+  
   static getAvailableRooms(server: Server): Record<string, string[]> {
     const adapter = server.sockets.adapter;
     const rooms = adapter.rooms;

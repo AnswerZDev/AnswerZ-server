@@ -15,13 +15,25 @@ export class RoomService {
     
   }
 
+  /*
+  * Following functions are here to manage rooms informations so there are static and use in debug class to display infos
+  */
 
-
-  getAvailableRooms(server : Server): Map<string, Set<string>> {
+  static getAvailableRooms(server: Server): Record<string, string[]> {
     const adapter = server.sockets.adapter;
-    const rooms = adapter.rooms;  
-
-    return rooms;
+    const rooms = adapter.rooms;
+  
+    const availableRooms: Record<string, string[]> = {};
+  
+    if (rooms) {
+      rooms.forEach((users, roomName) => {
+        if (roomName && roomName !== '') {
+          const usersArray = Array.from(users);
+          availableRooms[roomName] = usersArray as string[];
+        }
+      });
+    }
+  
+    return availableRooms;
   }
-
 }

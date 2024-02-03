@@ -1,23 +1,32 @@
 import { WebSocketGateway, WebSocketServer, SubscribeMessage, MessageBody } from '@nestjs/websockets';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
+import { RoomService } from '../rooms/room.service';
 
 @WebSocketGateway()
 export class SocketGateway {
   @WebSocketServer() server: Server;
 
-  handleConnection(client: any, ...args: any[]) {
+  constructor(private readonly roomService: RoomService) {}
+
+  async handleConnection(client: Socket, ...args: any[]) {
     console.log('Client connecté :', client.id);
+
+    const roomId = 'testRoom';
+
+    this.roomService.joinRoom(roomId, client);
+
+    const availableRooms = this.roomService.getAvailableRooms(this.server);
+    console.log('Available Rooms:', availableRooms);
   }
 
-  handleDisconnect(client: any) {
+
+  handleDisconnect(client: Socket) {
     console.log('Client déconnecté :', client.id);
-  }
 
+    const roomId = 'default';
+    this.roomService.leaveRoom(roomId, client.id);
 
-  @SubscribeMessage('chat')
-  handleChatMessage(@MessageBody() message: string) {
-    console.log('Message reçu du client :', message);
-    
-    this.server.emit('message', `Nouveau message du serveur : ${message} + 'serv`);
+    client.leave(roomId);
   }
 }
+

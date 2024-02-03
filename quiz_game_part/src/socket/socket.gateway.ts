@@ -1,6 +1,7 @@
 import { WebSocketGateway, WebSocketServer, SubscribeMessage, MessageBody } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { RoomService } from '../rooms/room.service';
+import { RoomDebug } from 'debug/rooms.debug';
 
 @WebSocketGateway()
 export class SocketGateway {
@@ -15,8 +16,7 @@ export class SocketGateway {
 
     this.roomService.joinRoom(roomId, client);
 
-    const availableRooms = this.roomService.getAvailableRooms(this.server);
-    console.log('Available Rooms:', availableRooms);
+    RoomDebug.displayActualRoomStates(this.server);
   }
 
 

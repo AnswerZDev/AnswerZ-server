@@ -9,14 +9,17 @@ export class SocketGateway {
 
   constructor(private readonly roomService: RoomService) {}
 
-  async handleConnection(client: Socket, ...args: any[]) {
+  handleConnection(client: Socket) {
     console.log('Client connecté :', client.id);
 
-    const roomId = 'testRoom';
+    client.on("WantAddToRoom", (arg) => {
+      const roomId = arg;
 
-    this.roomService.joinRoom(roomId, client);
 
-    RoomDebug.displayActualRoomStates(this.server);
+      this.roomService.joinRoom(roomId, client);
+
+      RoomDebug.displayActualRoomStates(this.server);
+    });
   }
 
 
@@ -28,5 +31,8 @@ export class SocketGateway {
 
     client.leave(roomId);
   }
+
+
+  
 }
 

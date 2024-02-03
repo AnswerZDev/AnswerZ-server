@@ -37,7 +37,7 @@ export class Cardset {
   @Column({ name: "CreationDate" })
   private createdAt: Date;
 
-  @Column({ name: "Image", length: 255 })
+  @Column({ name: "Image" })
   private image: string;
 
   @OneToMany(() => Flashcard, "cardset")

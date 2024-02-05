@@ -84,23 +84,7 @@ export class AuthService {
       const token = await getIdToken(user);
       return { token };
     } catch (error: any) {
-      switch (error.code) {
-        case "auth/invalid-email":
-          throw new InvalidEmailException("Le format de l'email est invalide");
-          break;
-        case "auth/user-disabled":
-          throw new InternalServerErrorException("Utilisateur désactivé");
-          break;
-        case "auth/user-not-found":
-          throw new NotFoundException("Utilisateur non trouvé");
-          break;
-        case "auth/wrong-password":
-          throw new UnauthorizedException("Identifiants ou mot de passe introuvable");
-          break;
-        default:
-          throw new InternalServerErrorException("Une erreur est survenue pendant la connexion");
-          break;
-      }
+        throw new UnauthorizedException("Identifiants ou mot de passe incorrect");
     }
   }
 

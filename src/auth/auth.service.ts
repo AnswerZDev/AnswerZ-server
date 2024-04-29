@@ -46,7 +46,8 @@ export class AuthService {
         newUser.setId(userCredential.user.uid);
         await this.usersService.createUser(newUser);
       }
-      return userCredential;
+      const token = await getIdToken(userCredential.user);
+      return { token };
     } catch (error: any) {
       switch (error.code) {
         case "auth/invalid-email":

@@ -4,9 +4,13 @@ import { UsersService } from "./users.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "../entities/User.entity";
 import {AuthMiddleware} from "../middleware/Auth.middleware";
+import {SharedModule} from "../shared/shared.module";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [
+      TypeOrmModule.forFeature([User]),
+      SharedModule
+  ],
   controllers: [UsersController],
   providers: [UsersService],
   exports: [UsersService],

@@ -15,6 +15,7 @@ import { AnswerModule } from "./answer/answer.module";
 import { AnswerController } from "./answer/answer.controller";
 import { AccessControlModule } from "./access-control/access-control.module";
 import { AccessControlController } from "./access-control/access-control.controller";
+import {SharedModule} from "./shared/shared.module";
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { AccessControlController } from "./access-control/access-control.control
       synchronize: true,
       retryAttempts: parseInt(process.env.DATABASE_RETRY_ATTEMPTS),
     }),
+    SharedModule,
   ],
   controllers: [
     AppController,

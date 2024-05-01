@@ -9,11 +9,21 @@ export class CardsetController {
   constructor(private cardsetService: CardsetService) {}
 
   @ApiBearerAuth('access-token')
-  @Get()
+  @Get("private")
   async getMyPrivateCardsets(@Req() req) {
     try {
-      const datas = await this.cardsetService.getMyPrivateCardsets(req.user.uid);
-      console.dir(datas)
+      const datas = await this.cardsetService.getMyCardsets(req.user.uid, 'Private');
+      return datas;
+    } catch (error) {
+      throw new HttpException('Error fetching cardsets', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @ApiBearerAuth('access-token')
+  @Get('public')
+  async getMyPublicCardsets(@Req() req) {
+    try {
+      const datas = await this.cardsetService.getMyCardsets(req.user.uid, 'Public');
       return datas;
     } catch (error) {
       throw new HttpException('Error fetching cardsets', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -69,7 +79,6 @@ export class CardsetController {
   @UseInterceptors(FileInterceptor('image', { dest: '../../public' }))
   uploadImage(@UploadedFile() file) {
     try {
-      console.dir(file);
     } catch (error) {
       throw new HttpException(`Error with the image`, HttpStatus.BAD_REQUEST);
     }

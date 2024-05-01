@@ -11,7 +11,7 @@ export class CardsetService {
         private cardsetRepository: Repository<Cardset>
     ) {}
 
-    async getMyPrivateCardsets(idUser: number): Promise<Cardset[]> { 
+    async getMyPrivateCardsets(idUser: number): Promise<Cardset[]> {
         
         const options = {
             where: {

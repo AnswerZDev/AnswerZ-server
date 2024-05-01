@@ -11,12 +11,11 @@ export class CardsetService {
         private cardsetRepository: Repository<Cardset>
     ) {}
 
-    async getMyPrivateCardsets(idUser: number): Promise<Cardset[]> {
-        
+    async getMyCardsets(idUser: number, visibility: string): Promise<Cardset[]> {
         const options = {
             where: {
                 author: { id: idUser },
-                visibility: 'Private'
+                visibility: visibility
             },
             order: {
                 name: 'ASC'

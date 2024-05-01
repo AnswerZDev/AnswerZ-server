@@ -21,10 +21,7 @@ export class FlashcardService {
 
     async getAllFlashcardByCardsetId(cardsetId: number): Promise<Flashcard[]> {
         return await this.flashcardRepository.find({where: {cardset: {id: cardsetId}}} as FindManyOptions<Flashcard>);
-        
     }
-
-
 
     async createOrUpdate(data: any, id?: number): Promise<any> {
         const datas = await this.flashcardRepository.save(data);

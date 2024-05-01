@@ -28,20 +28,15 @@ export class FlashcardController {
     }
   }
 
-  @Get('/cardset/:CardSetId')
-  async getAllFlashcardByCardsetId(@Param('CardSetId') CardSetId: number) {
+  @Get('/cardset/:CardsetId')
+  async getAllFlashcardByCardsetId(@Param('CardsetId') CardsetId: number) {
     try {
-      const datas = await this.flashcardService.getAllFlashcardByCardsetId(CardSetId);
+      const datas = await this.flashcardService.getAllFlashcardByCardsetId(CardsetId);
       return datas;
     } catch (error) {
-      throw new HttpException('Flashcard with Cardset ID ${CardSetId} not found', HttpStatus.BAD_REQUEST);
+      throw new HttpException(`Flashcard with Cardset ID ${CardsetId} not found`, HttpStatus.BAD_REQUEST);
     }
   }
-
-
-
-
-
 
   @Post()
   async create(@Body() data: any) {

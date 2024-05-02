@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import {Injectable, InternalServerErrorException} from "@nestjs/common";
 import * as firebase from "firebase-admin";
 import {FireBaseConfig} from "../../config/firebase.config";
 
@@ -32,6 +32,14 @@ export class FirebaseService{
             };
         } catch (error) {
             throw error; // Re-throw the error or handle it as needed
+        }
+    }
+
+    public async updateUser(uid: string, data: any): Promise<any> {
+        try {
+            await this._defaultApp.auth().updateUser(uid, data);
+        } catch (error) {
+            throw new InternalServerErrorException("Error while updating user");
         }
     }
 }

@@ -1,10 +1,8 @@
 import {
-    Body,
     Controller,
     Get,
     InternalServerErrorException,
     Patch,
-    Post,
     Req,
     UploadedFile,
     UseInterceptors
@@ -13,7 +11,10 @@ import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {UsersService} from "./users.service";
 import {FirebaseService} from "../shared/services/firebase.service";
 import {FileInterceptor} from "@nestjs/platform-express";
-import {FileUploadService} from "../shared/services/file-upload.service";
+import {diskStorage} from "multer";
+import * as path from "path";
+import {DEFAULT_APP_NAME, DEFAULT_APPS_PATH} from "@nestjs/schematics";
+import * as fs from "fs";
 
 @ApiTags("User")
 @Controller("user")
@@ -21,7 +22,6 @@ export class UsersController {
     constructor(
         private readonly userService: UsersService,
         private readonly _firebaseService: FirebaseService,
-        private readonly _fileUploadService: FileUploadService
     ) {
     }
 
@@ -43,8 +43,31 @@ export class UsersController {
 
     @ApiBearerAuth('access-token')
     @Patch('upload-photo')
-    @UseInterceptors(FileInterceptor('photo'))
-    async uploadProfilePhoto(@UploadedFile() file) {
-        await this._fileUploadService.uploadFile(file);
+    @UseInterceptors(FileInterceptor('photoProfile', {
+        storage: diskStorage({
+            destination: (req: any, file, cb) => {
+                // Vérifiez si req.user.uid est défini
+                if (!req.user ||!req.user.uid) {
+                    return cb(new Error('User UID not found'), null);
+                }
+                const customPath = path.join('./public/users', req.user.uid, 'photo-profile');
+
+                // Créez le dossier s'il n'existe pas
+                fs.mkdirSync(customPath, { recursive: true });
+
+                cb(null, customPath);
+            },
+            filename: (req, file, cb) => {
+                cb(null, file.originalname);
+            },
+        }),
+        fileFilter: (req, file, callback) => {
+            if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+                return callback(new Error("Only image files are allowed"), false);
+            }
+            callback(null, true);
+        },
+    }))
+    async uploadProfilePhoto(@UploadedFile() photoProfile: Express.Multer.File, @Req() req) {
     }
 }

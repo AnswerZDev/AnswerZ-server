@@ -27,7 +27,7 @@ export class UsersController {
 
     @ApiBearerAuth('access-token')
     @Get("me")
-    async currentUser(@Req() req) {
+    async currentUser(@Req() req: any) {
         try {
             let user = await this.userService.findUserById(req.user.uid);
             let firebaseUser = await this._firebaseService.getUser(req.user.uid);
@@ -65,9 +65,16 @@ export class UsersController {
             if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
                 return callback(new Error("Only image files are allowed"), false);
             }
+            file.originalname = `profilePicture.${file.originalname.split('.')[1]}`;
             callback(null, true);
         },
     }))
-    async uploadProfilePhoto(@UploadedFile() photoProfile: Express.Multer.File, @Req() req) {
+    async uploadProfilePhoto(@UploadedFile() photoProfile: Express.Multer.File, @Req() req: any) {
+        await this._firebaseService.updateUser(
+            req.user.uid,
+            {
+                photoName: photoProfile.originalname
+            }
+        );
     }
 }

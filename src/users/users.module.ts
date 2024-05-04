@@ -19,6 +19,9 @@ export class UsersModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {
     consumer
         .apply(AuthMiddleware)
-        .forRoutes('/user/me');
+        .forRoutes(
+            '/user/me',
+            '/user/upload-photo'
+        );
   }
 }

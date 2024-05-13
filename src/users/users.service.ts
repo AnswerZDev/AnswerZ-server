@@ -34,4 +34,10 @@ export class UsersService{
     async getAllUsers(): Promise<User[]> {
         return this.userRepository.find();
     }
+
+    async getUrlProfilePicture(idUser: string, photoName: string): Promise<string> {
+        // return the url of server where the photo is stored. Dynamicly generate the url. With the url server
+        // the client can download the photo
+        return `http://localhost:3000/public/users/${idUser}/photo-profile/${photoName}`;
+    }
 }

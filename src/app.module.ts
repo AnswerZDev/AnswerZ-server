@@ -16,6 +16,8 @@ import { AnswerController } from "./answer/answer.controller";
 import { AccessControlModule } from "./access-control/access-control.module";
 import { AccessControlController } from "./access-control/access-control.controller";
 import {SharedModule} from "./shared/shared.module";
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -40,6 +42,10 @@ import {SharedModule} from "./shared/shared.module";
       retryAttempts: parseInt(process.env.DATABASE_RETRY_ATTEMPTS),
     }),
     SharedModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'), // Ajustez le chemin selon la structure de votre projet
+      serveRoot: '/public/', // Chemin sous lequel les fichiers seront servis
+    }),
   ],
   controllers: [
     AppController,

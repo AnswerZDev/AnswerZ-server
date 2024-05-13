@@ -13,8 +13,10 @@ import {FirebaseService} from "../shared/services/firebase.service";
 import {FileInterceptor} from "@nestjs/platform-express";
 import {diskStorage} from "multer";
 import * as path from "path";
-import {DEFAULT_APP_NAME, DEFAULT_APPS_PATH} from "@nestjs/schematics";
 import * as fs from "fs";
+import {InjectRepository} from "@nestjs/typeorm";
+import {Repository} from "typeorm";
+import {User} from "../entities/User.entity";
 
 @ApiTags("User")
 @Controller("user")
@@ -29,7 +31,13 @@ export class UsersController {
     @Get("me")
     async currentUser(@Req() req: any) {
         try {
-            let user = await this.userService.findUserById(req.user.uid);
+            // Get user from database
+            let user: any = await this.userService.findUserById(req.user.uid);
+
+            // set the url of the profile picture
+            user.profilePicture = await this.userService.getUrlProfilePicture(user.id, user.profilePicture);
+
+            // Get user from firebase
             let firebaseUser = await this._firebaseService.getUser(req.user.uid);
 
             return {
@@ -70,11 +78,12 @@ export class UsersController {
         },
     }))
     async uploadProfilePhoto(@UploadedFile() photoProfile: Express.Multer.File, @Req() req: any) {
-        await this._firebaseService.updateUser(
-            req.user.uid,
-            {
-                photoName: photoProfile.originalname
-            }
-        );
+        let user: User = await this.userService.findUserById(req.user.uid);
+        if(!user) {
+            throw new InternalServerErrorException("User not found");
+        }
+
+        user.setProfilePicture(photoProfile.originalname);
+        await this.userService.changeUser(user);
     }
 }

@@ -1,44 +1,56 @@
 import {Column, Entity, JoinColumn, OneToMany} from "typeorm";
-import { Cardset } from "./Cardset.entity";
-import { AccessControl } from "./AccessControl.entity";
+import {Cardset} from "./Cardset.entity";
+import {AccessControl} from "./AccessControl.entity";
 import {Role} from "../enum/role.enum";
 
 @Entity()
 export class User {
-  @Column({ name: "UserFirebaseId", primary: true, length: 255 })
-  private id: string;
+    @Column({name: "UserFirebaseId", primary: true, length: 255})
+    private id: string;
 
-  @OneToMany(() => Cardset, "author")
-  private cardsets: Cardset[];
+    @OneToMany(() => Cardset, "author")
+    private cardsets: Cardset[];
 
-  @OneToMany(() => Cardset, "user")
-  private accessControls: AccessControl[];
+    @OneToMany(() => Cardset, "user")
+    private accessControls: AccessControl[];
 
-  public getId(): string {
-    return this.id;
-  }
+    @Column({name: 'photo', length: 255, nullable: true})
+    private profilePicture: string;
 
-  public setId(id: string): void {
-    this.id = id;
-  }
+    public getId(): string {
+        return this.id;
+    }
 
-  public getCardsets(): Cardset[] {
-    return this.cardsets;
-  }
+    public setId(id: string): void {
+        this.id = id;
+    }
 
-  public setCardsets(cardsets: Cardset[]): void {
-    this.cardsets = cardsets;
-  }
+    public getCardsets(): Cardset[] {
+        return this.cardsets;
+    }
 
-  public getAccessControls(): AccessControl[] {
-    return this.accessControls;
-  }
+    public setCardsets(cardsets: Cardset[]): void {
+        this.cardsets = cardsets;
+    }
 
-  public setAccessControls(accessControls: AccessControl[]): void {
-    this.accessControls = accessControls;
-  }
+    public getAccessControls(): AccessControl[] {
+        return this.accessControls;
+    }
 
-  public getRoles(): string[] {
-    return [Role.USER];
-  }
+    public setAccessControls(accessControls: AccessControl[]): void {
+        this.accessControls = accessControls;
+    }
+
+    public getRoles(): string[] {
+        return [Role.USER];
+    }
+
+    public getProfilePicture(): string {
+        return this.profilePicture;
+    }
+
+    public setProfilePicture(profilePicture: string): void {
+        this.profilePicture = profilePicture;
+    }
+
 }

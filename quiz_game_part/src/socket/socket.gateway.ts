@@ -16,21 +16,28 @@ export class SocketGateway {
       client.on('answer', (data) => {
         console.log(`Message reçu de la room ${data.roomId}: ${data.message}`);
       });
-    
 
+      client.on('getRoomInfo', (roomId: string) => {
+        const roomInfo = this.roomService.getRoomInfo(roomId);
+        if (roomInfo) {
+          client.emit('roomInfo', roomInfo);
+        } else {
+          // Gérer le cas où la room n'existe pas ou les informations ne sont pas disponibles
+          // Par exemple, envoyer un message d'erreur au client
+          client.emit('roomInfoError', 'La room demandée n\'existe pas ou les informations sont indisponibles.');
+        }
+      });
+      
+    
+      
 
       client.on('create-game', (arg) => {
         const roomId = arg;
-
-        console.log('create-game');
-
-        const game = new Game();
-
+        const game = new Game(client.id);
         this.roomService.joinRoom(roomId, client, game);
-
+        console.log("New room " + roomId + " added");
         console.log(this.roomService.rooms);
-
-        //RoomDebug.displayActualRoomStates(this.server);
+        this.server.emit('roomCreated', roomId); // Émettre l'événement roomCreated
       });
 
   }

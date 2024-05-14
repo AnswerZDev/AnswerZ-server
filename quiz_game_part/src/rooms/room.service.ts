@@ -16,7 +16,18 @@ export class RoomService {
     if (game) {
       this.rooms.get(roomId).game = game;
     }
+    
+    // if maxplayers
+
     client.join(roomId);
+  }
+
+  getRoomInfo(roomId: string): any {
+    if (this.rooms.has(roomId)) {
+      return this.rooms.get(roomId); // Vous pouvez retourner les informations spécifiques de la room
+    } else {
+      return null; // Retournez null si la room n'existe pas
+    }
   }
 
 
@@ -32,11 +43,12 @@ export class RoomService {
 
 
 
+
+
   /*
   * Following functions are here to manage rooms informations so there are static and use in debug class to display infos
   */
-
-
+ 
   
   static getAvailableRooms(server: Server): Record<string, string[]> {
     const adapter = server.sockets.adapter;

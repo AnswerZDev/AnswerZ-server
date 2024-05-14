@@ -2,7 +2,7 @@ import {
     Controller,
     Get,
     InternalServerErrorException,
-    Patch,
+    Patch, Post,
     Req,
     UploadedFile,
     UseInterceptors
@@ -37,6 +37,9 @@ export class UsersController {
             // set the url of the profile picture
             user.profilePicture = await this.userService.getUrlProfilePicture(user.id, user.profilePicture);
 
+            // set the number of flashcards of the user
+            user.numberOfFlashcards = await this.userService.getNumberOfFlashcards(user.id);
+
             // Get user from firebase
             let firebaseUser = await this._firebaseService.getUser(req.user.uid);
 
@@ -50,7 +53,7 @@ export class UsersController {
     }
 
     @ApiBearerAuth('access-token')
-    @Patch('upload-photo')
+    @Post('upload-photo')
     @UseInterceptors(FileInterceptor('photoProfile', {
         storage: diskStorage({
             destination: (req: any, file, cb) => {

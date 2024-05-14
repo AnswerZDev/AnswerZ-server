@@ -3,8 +3,11 @@ export class Game {
     private gameId: string;
     private maxPlayers: number;
     private players: Map<string, any>;
+    private questions = [];
+    private host: string;
 
-    constructor({ maxPlayers = 5 }: { maxPlayers?: number } = {}) {
+    constructor(host, { maxPlayers = 5 }: { maxPlayers?: number } = {}) {
+        this.host = host
         this.maxPlayers = maxPlayers;
     }
 
@@ -19,4 +22,5 @@ export class Game {
     leave(playerId: string): void {
         this.players.delete(playerId);
     }
+
 }

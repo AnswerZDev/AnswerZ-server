@@ -1,9 +1,10 @@
 import { WebSocketGateway, WebSocketServer, SubscribeMessage, MessageBody } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { RoomService } from '../rooms/room.service';
+import { Game } from 'src/Models/Game';
 import { RoomDebug } from 'debug/rooms.debug';
 
-@WebSocketGateway()
+@WebSocketGateway( { cors: true})
 export class SocketGateway {
   @WebSocketServer() server: Server;
 
@@ -12,16 +13,22 @@ export class SocketGateway {
   handleConnection(client: Socket) {
     console.log('Client connecté :', client.id);
 
-    client.on("WantAddToRoom", (arg) => {
-      const roomId = arg;
 
+      client.on('create-game', (arg) => {
+        const roomId = arg;
 
-      this.roomService.joinRoom(roomId, client);
+        console.log('create-game');
 
-      RoomDebug.displayActualRoomStates(this.server);
-    });
+        const game = new Game();
+
+        this.roomService.joinRoom(roomId, client, game);
+
+        console.log(this.roomService.rooms);
+
+        //RoomDebug.displayActualRoomStates(this.server);
+      });
+
   }
-
 
   handleDisconnect(client: Socket) {
     console.log('Client déconnecté :', client.id);
@@ -30,9 +37,6 @@ export class SocketGateway {
     this.roomService.leaveRoom(roomId, client.id);
 
     client.leave(roomId);
-  }
-
-
-  
+  }  
 }
 

@@ -1,18 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
+import { Game } from 'src/Models/Game';
 
 @Injectable()
 export class RoomService {
+  rooms: Map<string, { clients: Set<string>; game?: Game }> = new Map();
 
-  async joinRoom(roomId: string, client: Socket): Promise<void> {
-    console.log(client.id  + ' added to ' + roomId + ' room');
+  constructor() {}
+
+  joinRoom(roomId: string, client: Socket, game?: Game): void {
+    if (!this.rooms.has(roomId)) {
+      this.rooms.set(roomId, { clients: new Set() });
+    }
+    this.rooms.get(roomId).clients.add(client.id);
+    if (game) {
+      this.rooms.get(roomId).game = game;
+    }
     client.join(roomId);
   }
 
 
 
-  async leaveRoom(roomId: string, userId: string): Promise<void> {
-    
+  leaveRoom(roomId: string, clientId: string): void {
+    if (this.rooms.has(roomId)) {
+      this.rooms.get(roomId).clients.delete(clientId);
+      if (this.rooms.get(roomId).clients.size === 0) {
+        this.rooms.delete(roomId);
+      }
+    }
   }
 
 

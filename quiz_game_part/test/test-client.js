@@ -4,7 +4,7 @@ const socket = io('http://localhost:3000');
 socket.on('connect', async () => {
   console.log('Connected to server');
 
-  socket.emit("WantAddToRoom", "ROOM_ID");
+  socket.emit("create-game", "ROOM_ID");
 });
 
 socket.on('roomId', (roomId) => {

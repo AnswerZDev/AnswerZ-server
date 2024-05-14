@@ -13,6 +13,11 @@ export class SocketGateway {
   handleConnection(client: Socket) {
     console.log('Client connecté :', client.id);
 
+      client.on('answer', (data) => {
+        console.log(`Message reçu de la room ${data.roomId}: ${data.message}`);
+      });
+    
+
 
       client.on('create-game', (arg) => {
         const roomId = arg;

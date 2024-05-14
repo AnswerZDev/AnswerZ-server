@@ -11,6 +11,11 @@ socket.on('roomId', (roomId) => {
   console.log('Room ID:', roomId);
 });
 
+socket.on('answer', (data) => {
+  console.log(`Message reçu de la room ${data.roomId}: ${data.message}`);
+});
+
+
 socket.on('disconnect', () => {
   console.log('Disconnected from server');
 });

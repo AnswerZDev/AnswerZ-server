@@ -4,58 +4,49 @@ import { Game } from 'src/Models/Game';
 
 @Injectable()
 export class RoomService {
-  rooms: Map<string, { clients: Set<string>; game?: Game }> = new Map();
+  rooms: Map<string, { clients: string[]; game?: Game }> = new Map();
 
   constructor() {}
 
   joinRoom(roomId: string, client: Socket, game?: Game): void {
     if (!this.rooms.has(roomId)) {
-      this.rooms.set(roomId, { clients: new Set() });
+      this.rooms.set(roomId, { clients: [] });
     }
-    this.rooms.get(roomId).clients.add(client.id);
+    this.rooms.get(roomId).clients.push(client.id);
     if (game) {
       this.rooms.get(roomId).game = game;
     }
-    
-    // if maxplayers
 
     client.join(roomId);
   }
 
   getRoomInfo(roomId: string): any {
     if (this.rooms.has(roomId)) {
-      return this.rooms.get(roomId); // Vous pouvez retourner les informations spécifiques de la room
+      return this.rooms.get(roomId);
     } else {
       return null; // Retournez null si la room n'existe pas
     }
   }
 
-
-
   leaveRoom(roomId: string, clientId: string): void {
     if (this.rooms.has(roomId)) {
-      this.rooms.get(roomId).clients.delete(clientId);
-      if (this.rooms.get(roomId).clients.size === 0) {
-        this.rooms.delete(roomId);
+      const room = this.rooms.get(roomId);
+      const index = room.clients.indexOf(clientId);
+      if (index !== -1) {
+        room.clients.splice(index, 1);
+        if (room.clients.length === 0) {
+          this.rooms.delete(roomId);
+        }
       }
     }
   }
 
-
-
-
-
-  /*
-  * Following functions are here to manage rooms informations so there are static and use in debug class to display infos
-  */
- 
-  
   static getAvailableRooms(server: Server): Record<string, string[]> {
     const adapter = server.sockets.adapter;
     const rooms = adapter.rooms;
-  
+
     const availableRooms: Record<string, string[]> = {};
-  
+
     if (rooms) {
       rooms.forEach((users, roomName) => {
         if (roomName && roomName !== '') {
@@ -64,7 +55,7 @@ export class RoomService {
         }
       });
     }
-  
+
     return availableRooms;
   }
 }

@@ -15,7 +15,13 @@ export class CardsetService {
     }
 
     async getAllCardset() : Promise<Cardset[]> {
-        return await this.carSetRepository.find();
+        return await this.carSetRepository.find(
+            {
+                relations : {
+                    flashcards: true
+                }
+            }
+        );
     }
 
     async getOneCardset(my_id: number) : Promise<Cardset | null> {

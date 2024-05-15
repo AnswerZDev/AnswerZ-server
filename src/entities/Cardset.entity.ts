@@ -35,6 +35,9 @@ export class Cardset {
   @Column({ name: "CreationDate" })
   private createdAt: Date;
 
+  @Column({ name: "Category", length: 255 })
+  private category: string;
+
   @OneToMany(() => Flashcard, "cardset")
   public flashcards: Flashcard[];
 
@@ -115,5 +118,13 @@ export class Cardset {
 
   public setAccessControls(accessControls: AccessControl[]): void {
     this.accessControls = accessControls;
+  }
+
+  public getCategory(): string{
+    return this.category;
+  }
+
+  public setCategory(new_category): void{
+    this.category = new_category;
   }
 }

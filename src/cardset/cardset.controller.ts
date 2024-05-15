@@ -11,6 +11,7 @@ export class CardsetController {
   async getAll() {
     try {
       const datas = await this.cardset_service.getAllCardset();
+      console.log(datas)
       return datas;
     } catch (error) {
       throw new HttpException('Error data not found', HttpStatus.NOT_FOUND);

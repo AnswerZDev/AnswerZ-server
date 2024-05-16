@@ -1,16 +1,93 @@
-import { Controller, Get, HttpException, HttpStatus } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post, Req, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { CardsetService } from "./cardset.service";
+import { FileInterceptor } from "@nestjs/platform-express";
 
-@ApiTags("Cardset")
-@Controller("Cardset")
+@ApiTags("cardset")
+@Controller("cardset")
 export class CardsetController {
-  constructor(private cardset_service: CardsetService) {}
+  constructor(private cardsetService: CardsetService) {}
+
+  @ApiBearerAuth('access-token')
+  @Get("private")
+  async getMyPrivateCardsets(@Req() req) {
+    try {
+      const datas = await this.cardsetService.getMyCardsets(req.user.uid, 'Private');
+      return datas;
+    } catch (error) {
+      throw new HttpException('Error fetching cardsets', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @ApiBearerAuth('access-token')
+  @Get('public')
+  async getMyPublicCardsets(@Req() req) {
+    try {
+      const datas = await this.cardsetService.getMyCardsets(req.user.uid, 'Public');
+      return datas;
+    } catch (error) {
+      throw new HttpException('Error fetching cardsets', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @Get(':id')
+  async getCardsetById(@Param('id') id: number) {
+    try {
+      const datas = await this.cardsetService.getCardsetById(id);
+      return datas;
+    } catch (error) {
+      throw new HttpException(`Cardset with ID ${id} not found`, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @ApiBearerAuth('access-token')
+  @Post()
+  async create(@Body() data: any) {
+    try {
+      const datas = await this.cardsetService.createOrUpdate(data);
+      return datas;
+    } catch (error) {
+      throw new HttpException('Error creating cardset', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @ApiBearerAuth('access-token')
+  @Patch(':id')
+  async update(@Body() data: any, @Param('id') id: number) {
+    try {
+      if(id !== undefined && id !== null) {
+        data.id = Number(id);
+      }
+      const datas = await this.cardsetService.createOrUpdate(data, id);
+      return datas;
+    } catch (error) {
+      throw new HttpException(`Cardset with ID ${id} not found`, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: number) {
+    try {
+      const datas = await this.cardsetService.delete(id);
+      return datas;
+    } catch (error) {
+      throw new HttpException(`Cardset with ID ${id} not found`, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('image', { dest: '../../public' }))
+  uploadImage(@UploadedFile() file) {
+    try {
+    } catch (error) {
+      throw new HttpException(`Error with the image`, HttpStatus.BAD_REQUEST);
+    }
+  }
 
   @Get()
   async getAll() {
     try {
-      const datas = await this.cardset_service.getAllCardset();
+      const datas = await this.cardsetService.getAllCardset();
       console.log(datas)
       return datas;
     } catch (error) {
@@ -21,7 +98,7 @@ export class CardsetController {
   @Get('/one')
   async getOne() {
     try {
-      const datas = await this.cardset_service.getOneCardset(4);
+      const datas = await this.cardsetService.getOneCardset(4);
       return datas;
     } catch (error) {
       throw new HttpException('Error data not found', HttpStatus.NOT_FOUND);

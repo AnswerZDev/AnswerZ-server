@@ -29,14 +29,17 @@ export class Cardset {
   @Column({ name: "Visibility", length: 255 })
   private visibility: string;
 
+  @Column({ name: "Category", length: 255 })
+  private category: string;
+
   @Column({ name: "NumberOfGoodAnswer" })
   private numberOfGoodAnswer: number;
 
   @Column({ name: "CreationDate" })
   private createdAt: Date;
 
-  @Column({ name: "Category", length: 255 })
-  private category: string;
+  // @Column({ name: "Image" })
+  // private image: string;
 
   @OneToMany(() => Flashcard, "cardset")
   public flashcards: Flashcard[];
@@ -119,6 +122,14 @@ export class Cardset {
   public setAccessControls(accessControls: AccessControl[]): void {
     this.accessControls = accessControls;
   }
+
+  // public getImage(): string {
+  //   return this.image;
+  // }
+
+  // public setImage(image: string): void {
+  //   this.image = image;
+  // }
 
   public getCategory(): string{
     return this.category;

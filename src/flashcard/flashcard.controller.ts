@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Param, Put } from "@nestjs/common";
-import { Delete, Post } from "@nestjs/common/decorators";
+import { Delete, Patch, Post } from "@nestjs/common/decorators";
 import { ApiTags } from "@nestjs/swagger";
 import { FlashcardService } from "../flashcard/flashcard.service";
 
@@ -18,6 +18,26 @@ export class FlashcardController {
     }
   }
 
+  @Get(':id')
+  async getFlashcardById(@Param('id') id: number) {
+    try {
+      const datas = await this.flashcardService.getFlashcardById(id);
+      return datas;
+    } catch (error) {
+      throw new HttpException('Flashcard with ID ${id} not found', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Get('/cardset/:CardsetId')
+  async getAllFlashcardByCardsetId(@Param('CardsetId') CardsetId: number) {
+    try {
+      const datas = await this.flashcardService.getAllFlashcardByCardsetId(CardsetId);
+      return datas;
+    } catch (error) {
+      throw new HttpException(`Flashcard with Cardset ID ${CardsetId} not found`, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   @Post()
   async create(@Body() data: any) {
     try {
@@ -28,13 +48,16 @@ export class FlashcardController {
     }
   }
 
-  @Put(':id')
+  @Patch(':id')
   async update(@Body() data: any, @Param('id') id: number) {
     try {
+      if(id !== undefined && id !== null) {
+        data.id = Number(id);
+      }
       const datas = await this.flashcardService.createOrUpdate(data, id);
       return datas;
     } catch (error) {
-      throw new HttpException('Flashcard with ID ${id} not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Flashcard with ID ${id} not found', HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -44,7 +67,7 @@ export class FlashcardController {
       const datas = await this.flashcardService.delete(id);
       return datas;
     } catch (error) {
-      throw new HttpException('Flashcard with ID ${id} not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Flashcard with ID ${id} not found', HttpStatus.BAD_REQUEST);
     }
   }
 }

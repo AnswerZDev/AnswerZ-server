@@ -8,17 +8,48 @@ export class RoomService {
 
   constructor() {}
 
-  joinRoom(roomId: string, client: Socket, game?: Game): void {
-    if (!this.rooms.has(roomId)) {
-      this.rooms.set(roomId, { clients: [] });
+  createRoom(roomId: string, client: Socket, game?: Game): void {
+    try {
+      if (!this.rooms.has(roomId)) {
+        this.rooms.set(roomId, { clients: [] });
+      }
+      
+      const room = this.rooms.get(roomId);
+      if (room) {
+        room.clients.push(client.id);
+        if (game) {
+          room.game = game;
+        }
+        client.join(roomId);
+      } else {
+        throw new Error(`Impossible de récupérer la salle après sa création. ID de salle : ${roomId}`);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la création de la salle:', error);
     }
-    this.rooms.get(roomId).clients.push(client.id);
-    if (game) {
-      this.rooms.get(roomId).game = game;
-    }
-
-    client.join(roomId);
   }
+  
+
+
+  joinRoom(roomId: string, client: Socket): void {
+    try {
+      if (this.rooms.has(roomId)) {
+        const room = this.rooms.get(roomId);
+        if (room) {
+          room.clients.push(client.id);
+          client.join(roomId);
+        } else {
+          throw new Error('La salle existe mais n\'a pas pu être récupérée.');
+        }
+      } else {
+        throw new Error(`La salle avec l'ID ${roomId} n'existe pas.`);
+      }
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout du client à la salle:', error);
+    }
+    
+  }
+
 
 
   isClientInRoom(roomId, clientId) {

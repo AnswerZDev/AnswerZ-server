@@ -27,16 +27,11 @@ export class SocketGateway {
           client.emit('roomInfoError', 'La room demandée n\'existe pas ou les informations sont indisponibles.');
         }
       });
-      
-    
-      
 
       client.on('create-game', (arg) => {
         const roomId = arg;
         const game = new Game(client.id);
         this.roomService.createRoom(roomId, client, game);
-        console.log("New room " + roomId + " added");
-        console.log(this.roomService.rooms);
         this.server.emit('roomCreated', roomId);
       });
 
@@ -44,13 +39,9 @@ export class SocketGateway {
       client.on('join-game', (arg) => {
         const roomId = arg;
         this.roomService.joinRoom(roomId, client);
-        console.log("New room " + roomId + " added");
-        console.log(this.roomService.rooms);
         this.server.emit('joined-game', roomId);
+        this.server.to(roomId).emit('userJoined', { roomId, clientId: client.id });
       });
-
-
-
   }
 
   handleDisconnect(client: Socket) {

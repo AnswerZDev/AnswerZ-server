@@ -20,6 +20,16 @@ export class RoomService {
     client.join(roomId);
   }
 
+
+  isClientInRoom(roomId, clientId) {
+    const room = this.rooms.get(roomId);
+    if (room && room.clients.includes(clientId)) {
+        return true;
+    }
+    return false;
+  }
+
+
   getRoomInfo(roomId: string): any {
     if (this.rooms.has(roomId)) {
       return this.rooms.get(roomId);

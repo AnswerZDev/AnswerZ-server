@@ -20,10 +20,10 @@ export class SocketGateway {
       client.on('getRoomInfo', (roomId: string) => {
         const roomInfo = this.roomService.getRoomInfo(roomId);
         if (roomInfo) {
-          client.emit('roomInfo', roomInfo);
+          if(this.roomService.isClientInRoom(roomId, client.id)){
+            client.emit('roomInfo', roomInfo); // TODO USE client id not roomId
+          }
         } else {
-          // Gérer le cas où la room n'existe pas ou les informations ne sont pas disponibles
-          // Par exemple, envoyer un message d'erreur au client
           client.emit('roomInfoError', 'La room demandée n\'existe pas ou les informations sont indisponibles.');
         }
       });

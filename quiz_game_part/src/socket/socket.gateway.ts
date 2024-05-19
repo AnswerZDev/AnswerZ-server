@@ -40,7 +40,13 @@ export class SocketGateway {
         const roomId = arg;
         this.roomService.joinRoom(roomId, client);
         this.server.emit('joined-game', roomId);
-        this.server.to(roomId).emit('userJoined', { roomId, clientId: client.id });
+        this.server.to(roomId).emit('userJoined');
+      });
+
+
+      client.on('start-game', (arg) => {
+        const roomId = arg;
+        this.server.to(roomId).emit('game-started');
       });
   }
 

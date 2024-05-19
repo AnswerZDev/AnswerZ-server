@@ -19,6 +19,7 @@ export class RoomService {
         room.clients.push(client.id);
         if (game) {
           room.game = game;
+          room.game.nOfActualPlayers += 1;
         }
         client.join(roomId);
       } else {
@@ -37,6 +38,7 @@ export class RoomService {
         const room = this.rooms.get(roomId);
         if (room) {
           room.clients.push(client.id);
+          room.game.nOfActualPlayers += 1;
           client.join(roomId);
         } else {
           throw new Error('La salle existe mais n\'a pas pu être récupérée.');

@@ -10,10 +10,10 @@ import { AuthMiddleware } from "src/middleware/Auth.middleware";
   controllers: [CardsetController],
   providers: [CardsetService],
 })
-export class CardsetModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-        .apply(AuthMiddleware)
-        .forRoutes('/cardset');
-  }
+export class CardsetModule {
+  // configure(consumer: MiddlewareConsumer) {
+  //   consumer
+  //       .apply(AuthMiddleware)
+  //       .forRoutes('/cardset');
+  // }
 }

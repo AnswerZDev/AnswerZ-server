@@ -5,6 +5,8 @@ services:
     container_name: ${DATABASE_CONTAINER_NAME}
     image: postgres
     restart: always
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
@@ -12,3 +14,8 @@ services:
     ports:
       - ${DATABASE_PORT}:${DATABASE_PORT}
       
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

@@ -1,27 +1,17 @@
-import * as firebase from "firebase-admin";
 import { Injectable, NestMiddleware } from "@nestjs/common";
-import { initializeApp } from "firebase/app";
-import { FireBaseConfig } from "../config/firebase.config"
+import {FirebaseService} from "../shared/services/firebase.service";
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  private defaultApp: firebase.app.App;
-
-  private _firebaseConfig = new FireBaseConfig().getConfig()
-
-  constructor() {
-    if (!firebase.apps.length) {
-      this.defaultApp = firebase.initializeApp(this._firebaseConfig);
-    } else {
-      this.defaultApp = firebase.app();
-    }
-  }
+  constructor(
+      private readonly _firebaseService: FirebaseService
+  ) {  }
 
   use(req: any, res: any, next: (error?: any) => void): any {
     const token: string = req.headers.authorization;
     if (token && token.startsWith('Bearer ')) {
       const idToken = token.split('Bearer ')[1];
-      this.defaultApp.auth().verifyIdToken(idToken)
+      this._firebaseService.verifyToken(idToken)
           .then((decodedToken) => {
             req.user = decodedToken;
             next();

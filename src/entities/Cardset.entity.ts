@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  IsNull,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -9,6 +10,7 @@ import {
 import { User } from "./User.entity";
 import { Flashcard } from "./Flashcard.entity";
 import { AccessControl } from "./AccessControl.entity";
+import { Exclude, Expose, Transform } from "class-transformer";
 
 @Entity()
 export class Cardset {
@@ -37,7 +39,7 @@ export class Cardset {
   @Column({ name: "CreationDate" })
   private createdAt: Date;
 
-  @Column({ name: "Image" })
+  @Column({ name: "Image", nullable: true})
   private image: string;
 
   @OneToMany(() => Flashcard, "cardset")

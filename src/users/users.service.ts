@@ -2,13 +2,14 @@ import { Injectable } from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
 import {User} from "../entities/User.entity";
 import {DeleteResult, FindOneOptions, Repository} from "typeorm";
+import { Cardset } from "src/entities/Cardset.entity";
 
 @Injectable()
 export class UsersService{
 
     constructor(
         @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
+        private readonly userRepository: Repository<User>
     ) {}
 
     async createUser(user: User): Promise<User> {

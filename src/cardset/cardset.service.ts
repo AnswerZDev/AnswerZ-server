@@ -1,8 +1,7 @@
-import { Injectable, Req } from "@nestjs/common";
-import { ApiBearerAuth } from "@nestjs/swagger";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Cardset } from "src/entities/Cardset.entity";
-import { FindManyOptions, FindOneOptions, Repository } from "typeorm";
+import { FindOneOptions, Repository } from "typeorm";
 
 @Injectable()
 export class CardsetService {
@@ -11,7 +10,7 @@ export class CardsetService {
         private cardsetRepository: Repository<Cardset>
     ) {}
 
-    async getMyCardsets(idUser: number, visibility: string): Promise<Cardset[]> {
+    async getMyCardsets(idUser: number, visibility?: string): Promise<Cardset[]> {
         const options = {
             where: {
                 author: { id: idUser },

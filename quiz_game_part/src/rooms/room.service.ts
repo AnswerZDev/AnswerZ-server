@@ -67,7 +67,7 @@ export class RoomService {
     if (this.rooms.has(roomId)) {
       return this.rooms.get(roomId);
     } else {
-      return null; // Retournez null si la room n'existe pas
+      return null;
     }
   }
 

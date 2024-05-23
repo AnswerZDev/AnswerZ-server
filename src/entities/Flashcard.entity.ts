@@ -12,7 +12,7 @@ export class Flashcard {
   @PrimaryGeneratedColumn({ name: "FlashcardId" })
   private id: number;
 
-  @ManyToOne(() => Cardset, "flashcards")
+  @ManyToOne(() => Cardset, "flashcards", { onDelete: 'CASCADE' })
   @JoinColumn({ name: "CardSetId", referencedColumnName: "id" })
   private cardset: Cardset;
 

@@ -126,6 +126,7 @@ export class CardsetController {
       const datas = await this.cardsetService.delete(id);
       return datas;
     } catch (error) {
+      console.dir(error)
       throw new HttpException(
         `Cardset with ID ${id} not found`,
         HttpStatus.BAD_REQUEST

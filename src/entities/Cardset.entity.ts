@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  IsNull,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -9,6 +10,7 @@ import {
 import { User } from "./User.entity";
 import { Flashcard } from "./Flashcard.entity";
 import { AccessControl } from "./AccessControl.entity";
+import { Exclude, Expose, Transform } from "class-transformer";
 
 @Entity()
 export class Cardset {
@@ -28,11 +30,17 @@ export class Cardset {
   @Column({ name: "Visibility", length: 255 })
   private visibility: string;
 
+  @Column({ name: "Category", length: 255 })
+  private category: string;
+
   @Column({ name: "NumberOfGoodAnswer" })
   private numberOfGoodAnswer: number;
 
   @Column({ name: "CreationDate" })
   private createdAt: Date;
+
+  @Column({ name: "Image", nullable: true})
+  private image: string;
 
   @OneToMany(() => Flashcard, "cardset")
   public flashcards: Flashcard[];
@@ -114,5 +122,21 @@ export class Cardset {
 
   public setAccessControls(accessControls: AccessControl[]): void {
     this.accessControls = accessControls;
+  }
+
+  public getImage(): string {
+    return this.image;
+  }
+
+  public setImage(image: string): void {
+    this.image = image;
+  }
+
+  public getCategory(): string {
+    return this.category;
+  }
+
+  public setCategory(category: string): void {
+    this.category = category;
   }
 }

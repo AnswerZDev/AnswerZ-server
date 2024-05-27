@@ -73,6 +73,7 @@ export class CardsetController {
   async getCardsetById(@Param("id") id: number, @Req() req){
     try {
       const datas = await this.cardsetService.getCardsetById(id);
+      console.log(datas);
       const imageUrl = datas.getImage() ? `http://localhost:3000/users/${req.user.uid}/image/cardset/${datas.getId()}/${datas.getImage()}` : null;
       const updatedDatas = {
         ...datas,
@@ -92,9 +93,11 @@ export class CardsetController {
   async create(@UploadedFile() file: Express.Multer.File, @Req() req, @Body() data) {
     try {
       data.author = req.user.uid;
+      
       if (file) {
         data.image = file.filename;
       }
+
       const datas = await this.cardsetService.createOrUpdate(data);
       return datas;
     } catch (error) {
@@ -135,7 +138,7 @@ export class CardsetController {
   }
 
   @ApiBearerAuth("access-token")
-  @Patch("upload-image-cardset/:id")
+  @Post("upload-image-cardset/:id")
   @UseInterceptors(
     FileInterceptor("imageCardset", {
       storage: diskStorage({

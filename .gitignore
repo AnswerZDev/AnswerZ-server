@@ -137,7 +137,7 @@ node_modules
 
 /googleAuth.json
 
-/public
+/public/*
+
 
 data/
-

@@ -28,7 +28,12 @@ export class CardsetService {
     }
 
     async getCardsetById(id: number): Promise<Cardset> {
-        return await this.cardsetRepository.findOne({ where: { id: id } } as FindOneOptions<Cardset>);
+        return await this.cardsetRepository.findOne({ 
+            where: { id: id },
+            relations: {
+                flashcards: true
+            }
+        } as FindOneOptions<Cardset>);
     }
 
     async createOrUpdate(data: any, id?: number): Promise<any> {

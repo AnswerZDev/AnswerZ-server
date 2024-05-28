@@ -68,7 +68,8 @@ export class CardsetController {
       );
     }
   }
-
+  
+  @ApiBearerAuth("access-token")
   @Get(":id")
   async getCardsetById(@Param("id") id: number, @Req() req){
     try {

@@ -4,7 +4,7 @@ import {FirebaseService} from "../shared/services/firebase.service";
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
   constructor(
-      private readonly _firebaseService: FirebaseService
+    private readonly _firebaseService: FirebaseService
   ) {  }
 
   use(req: any, res: any, next: (error?: any) => void): any {

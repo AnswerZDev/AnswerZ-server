@@ -73,7 +73,7 @@ web_modules/
 .yarn-integrity
 
 # dotenv environment variable files
-.env
+flashcards_Part/.env
 .env.development.local
 .env.test.local
 .env.production.local
@@ -135,6 +135,6 @@ node_modules
 # IDE files
 .idea
 
-/googleAuth.json
+/flashcards_Part/googleAuth.json
 
 /public/*

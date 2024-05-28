@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 
-import { FindManyOptions, FindOneOptions, Repository } from "typeorm";
+import { FindManyOptions, FindOneOptions, Not, Repository } from "typeorm";
 import { identity } from "rxjs";
 import { Cardset } from "src/entities/Cardset.entity";
 
@@ -48,14 +48,19 @@ export class CardsetService {
         }
     }
 
-    async getAllCardset() : Promise<Cardset[]> {
-        return await this.cardsetRepository.find(
-            {
-                relations : {
-                    flashcards: true
-                }
+    async getAllCardsetPublic(idUser: number) : Promise<Cardset[]> {
+        const options = {
+            where: {
+                author: { id: Not(idUser) },
+                visibility: 'Public'
+            },
+            relations: {
+                flashcards: true,
             }
-        );
+        } as FindOneOptions<Cardset>;
+
+        const cardsets = await this.cardsetRepository.find(options);
+        return cardsets;
     }
 
     async getOneCardset(my_id: number) : Promise<Cardset | null> {

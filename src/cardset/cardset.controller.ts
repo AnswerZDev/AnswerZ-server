@@ -207,10 +207,12 @@ export class CardsetController {
     await this.cardsetService.createOrUpdate(cardset);
   }
 
-  @Get()
-  async getAll() {
+  @ApiBearerAuth("access-token")
+  @Get('all/public')
+  async getAllCardsetPublic( @Req() req) {
+    console.log(req.user.uid);
     try {
-      const datas = await this.cardsetService.getAllCardset();
+      const datas = await this.cardsetService.getAllCardsetPublic(req.user.uid);
       console.log(datas)
       return datas;
     } catch (error) {

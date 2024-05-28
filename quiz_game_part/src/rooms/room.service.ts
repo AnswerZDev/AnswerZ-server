@@ -84,7 +84,6 @@ export class RoomService {
         }
       }
     }
-    console.log("actual rooms :");
     console.log(this.rooms);
   }
 

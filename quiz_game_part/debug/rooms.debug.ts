@@ -7,6 +7,7 @@ export class RoomDebug {
     const roomService = new RoomService();
 
     const availableRooms = RoomService.getAvailableRooms(server);
+    console.log("Actual Server states : \n");
     console.log(availableRooms);
   }
 }

@@ -134,3 +134,7 @@ node_modules
 
 # IDE files
 .idea
+
+/googleAuth.json
+
+/public/*

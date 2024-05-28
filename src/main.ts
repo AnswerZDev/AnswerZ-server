@@ -10,7 +10,7 @@ async function bootstrap() {
   app.enableCors({
     origin: 'http://localhost:4200', // Autoriser les requêtes depuis cette origine
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Autoriser ces méthodes HTTP
-    allowedHeaders: 'Content-Type, Accept, Authorization, skip-cache', // Autoriser ces en-têtes
+    allowedHeaders: 'Content-Type, Accept, Authorization, skip-cache, cache-control', // Autoriser ces en-têtes
   });
 
   const config = new DocumentBuilder()

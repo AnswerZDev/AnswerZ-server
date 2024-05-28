@@ -73,7 +73,6 @@ export class CardsetController {
   async getCardsetById(@Param("id") id: number, @Req() req){
     try {
       const datas = await this.cardsetService.getCardsetById(id);
-      console.log(datas);
       const imageUrl = datas.getImage() ? `http://localhost:3000/users/${req.user.uid}/image/cardset/${datas.getId()}/${datas.getImage()}` : null;
       const updatedDatas = {
         ...datas,
@@ -101,7 +100,6 @@ export class CardsetController {
       const datas = await this.cardsetService.createOrUpdate(data);
       return datas;
     } catch (error) {
-      console.dir(error)
       throw new HttpException("Error creating cardset", HttpStatus.BAD_REQUEST);
     }
   }
@@ -129,7 +127,6 @@ export class CardsetController {
       const datas = await this.cardsetService.delete(id);
       return datas;
     } catch (error) {
-      console.dir(error)
       throw new HttpException(
         `Cardset with ID ${id} not found`,
         HttpStatus.BAD_REQUEST
@@ -204,5 +201,7 @@ export class CardsetController {
     }
 
     await this.cardsetService.createOrUpdate(cardset);
+
+    return cardset;
   }
 }

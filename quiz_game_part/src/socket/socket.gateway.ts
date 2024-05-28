@@ -33,6 +33,7 @@ export class SocketGateway {
         const game = new Game(client.id);
         this.roomService.createRoom(roomId, client, game);
         this.server.emit('roomCreated', roomId);
+        RoomDebug.displayActualRoomStates(this.server);
       });
 
 
@@ -41,6 +42,23 @@ export class SocketGateway {
         this.roomService.joinRoom(roomId, client);
         this.server.emit('joined-game', roomId);
         this.server.to(roomId).emit('userJoined');
+        RoomDebug.displayActualRoomStates(this.server);
+      });
+
+
+      client.on('leave-game', (roomIdArg, isHostArg) => {
+        const roomId = roomIdArg;
+        const isHost = isHostArg;
+        
+        if(isHost){
+          this.server.socketsLeave(roomId);
+        }
+        else{
+          client.leave(roomId);
+          this.roomService.leaveRoom(roomId, client);
+        }
+        
+        RoomDebug.displayActualRoomStates(this.server);
       });
 
 
@@ -54,9 +72,10 @@ export class SocketGateway {
     console.log('Client déconnecté :', client.id);
 
     const roomId = 'default';
-    this.roomService.leaveRoom(roomId, client.id);
+    this.roomService.leaveRoom(roomId, client);
 
     client.leave(roomId);
+    RoomDebug.displayActualRoomStates(this.server);
   }  
 }
 

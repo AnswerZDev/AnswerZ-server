@@ -19,7 +19,7 @@ export class Flashcard {
   @Column({ name: "Question", length: 255 })
   private question: string;
 
-  @Column({ name: "Answer", length: 255 })
+  @Column({ name: "Answer", length: 255, nullable: true })
   private answer: string;
 
   constructor(flashcard: Partial<Flashcard>) {

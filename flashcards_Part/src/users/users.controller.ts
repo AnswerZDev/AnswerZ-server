@@ -33,6 +33,7 @@ export class UsersController {
         try {
             // Get user from database
             let user: any = await this.userService.findUserById(req.user.uid);
+            if(!user) return;
 
             // set the url of the profile picture
             user.profilePicture = await this.userService.getUrlProfilePicture(user.id, user.profilePicture);

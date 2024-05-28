@@ -48,6 +48,7 @@ export class UsersController {
                 ...firebaseUser
             }
         } catch (error) {
+            console.error(error);
             throw new InternalServerErrorException("Error while getting user");
         }
     }

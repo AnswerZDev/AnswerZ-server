@@ -57,7 +57,7 @@ export class UsersService {
         // count the number of flashcards of the user
         let numberOfFlashcards = 0;
         for (const cardSet of cardSetOfUser) {
-            numberOfFlashcards += cardSet.flashcards.length;
+            numberOfFlashcards += cardSet.flashcards !== undefined ? cardSet.flashcards.length : 0;
         }
 
         return numberOfFlashcards;

@@ -10,7 +10,8 @@ import {Cardset} from "../entities/Cardset.entity";
 @Module({
   imports: [
       TypeOrmModule.forFeature([
-          User
+          User,
+          Cardset
       ]),
       SharedModule,
   ],

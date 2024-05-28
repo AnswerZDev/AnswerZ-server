@@ -5,12 +5,13 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "../entities/User.entity";
 import {AuthMiddleware} from "../middleware/Auth.middleware";
 import {SharedModule} from "../shared/shared.module";
-import {Cardset} from "../entities/Cardset.entity";
+import { Cardset } from "src/entities/Cardset.entity";
 
 @Module({
   imports: [
       TypeOrmModule.forFeature([
-          User
+          User,
+          Cardset
       ]),
       SharedModule,
   ],

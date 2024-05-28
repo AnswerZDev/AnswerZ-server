@@ -1,8 +1,6 @@
 import {
-    forwardRef, Inject,
     Injectable,
     InternalServerErrorException,
-    NotFoundException,
     UnauthorizedException,
 } from "@nestjs/common";
 import {SignupUserDto} from "./dto/signup-user.dto";
@@ -18,7 +16,6 @@ import {getIdToken, updateProfile} from "@firebase/auth";
 import {ForgotPasswordUserDto} from "./dto/forgot-password-user.dto";
 import {InvalidEmailException} from "../exception/invalid-email.exception";
 import {UsersService} from "../users/users.service";
-import firebase from "firebase/compat";
 import {User} from "../entities/User.entity";
 
 

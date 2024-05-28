@@ -29,7 +29,6 @@ import { join } from 'path';
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      autoLoadEntities: true,
       synchronize: true,
       retryAttempts: parseInt(process.env.DATABASE_RETRY_ATTEMPTS),
     }),

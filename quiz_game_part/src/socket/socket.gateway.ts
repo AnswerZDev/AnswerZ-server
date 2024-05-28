@@ -51,6 +51,7 @@ export class SocketGateway {
         const isHost = isHostArg;
         
         if(isHost){
+          this.server.to(roomId).emit("host-leave");
           this.server.socketsLeave(roomId);
         }
         else{
@@ -69,13 +70,8 @@ export class SocketGateway {
   }
 
   handleDisconnect(client: Socket) {
-    console.log('Client déconnecté :', client.id);
+    // TODO
+  }
 
-    const roomId = 'default';
-    this.roomService.leaveRoom(roomId, client);
-
-    client.leave(roomId);
-    RoomDebug.displayActualRoomStates(this.server);
-  }  
 }
 

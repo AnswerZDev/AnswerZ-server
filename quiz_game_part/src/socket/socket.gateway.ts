@@ -3,16 +3,16 @@ import { Server, Socket } from 'socket.io';
 import { RoomService } from '../rooms/room.service';
 import { Game } from 'src/Models/Game';
 import { RoomDebug } from 'debug/rooms.debug';
+import { SocketService } from './socket.service';
 
 @WebSocketGateway( { cors: true})
 export class SocketGateway {
   @WebSocketServer() server: Server;
 
-  constructor(private readonly roomService: RoomService) {}
+  constructor(private readonly roomService: RoomService, private readonly socketService: SocketService ) {}
 
   handleConnection(client: Socket) {
     console.log('Client connecté :', client.id);
-
       client.on('answer', (data) => {
         console.log(`Message reçu de la room ${data.roomId}: ${data.message}`);
       });

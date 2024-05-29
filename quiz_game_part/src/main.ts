@@ -10,10 +10,10 @@ async function bootstrap() {
 
   // Configurer CORS spécifiquement pour Socket.IO
   app.use(cors({
-    origin:  "http://localhost:4200", // Remplacez cela par l'URL de votre front-end Angular
+    origin:  "http://localhost:4200",
     credentials: true,
   }));
 
-  await app.listen(3000);
+  await app.listen(3100);
 }
 bootstrap();

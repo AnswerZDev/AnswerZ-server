@@ -1,22 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { Game } from 'src/Models/Game';
+import { SocketService } from 'src/socket/socket.service';
 
 @Injectable()
 export class RoomService {
-  rooms: Map<string, { clients: string[]; game?: Game }> = new Map();
+  rooms: Map<string, { clients: string[]; game?: Game; users: string[]}> = new Map();
 
-  constructor() {}
 
-  createRoom(roomId: string, client: Socket, game?: Game): void {
+  createRoom(roomId: string, client: Socket, game: Game, userUid: string): void {
     try {
       if (!this.rooms.has(roomId)) {
-        this.rooms.set(roomId, { clients: [] });
+        this.rooms.set(roomId, { clients: [], users: [] });
       }
       
       const room = this.rooms.get(roomId);
       if (room) {
         room.clients.push(client.id);
+        room.users.push(userUid);
         if (game) {
           room.game = game;
           room.game.nOfActualPlayers += 1;
@@ -33,12 +34,12 @@ export class RoomService {
   
 
 
-  joinRoom(roomId: string, client: Socket): void {
+  joinRoom(roomId: string, userUid: string, client: Socket): void {
     try {
       if (this.rooms.has(roomId)) {
         const room = this.rooms.get(roomId);
         if (room) {
-          room.clients.push(client.id);
+          room.clients.push(userUid);
           room.game.nOfActualPlayers += 1;
           client.join(roomId);
           console.log(this.rooms);
@@ -62,6 +63,16 @@ export class RoomService {
     }
     return false;
   }
+
+  isUserInRoom(roomId, userUid) {
+    const room = this.rooms.get(roomId);
+    if (room && room.users.includes(userUid)) {
+        return true;
+    }
+    return false;
+  }
+
+
 
 
   getRoomInfo(roomId: string): any {

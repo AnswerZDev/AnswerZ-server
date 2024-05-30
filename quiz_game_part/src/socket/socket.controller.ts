@@ -13,6 +13,8 @@ export class SocketController {
         const datas = await  this._socketService.getUserInfos(req.headers.authorization.split(' ')[1]);
         return datas;
     }
+
+    
 }
 
 

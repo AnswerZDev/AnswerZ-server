@@ -6,7 +6,7 @@ export class SocketService {
 
     constructor(private readonly _httpClient: HttpService){}
     
-    async getUserInfos(token : string): Promise<any>{
+    async getUserInfos(token : string): Promise<any> {
         try {
             const response = await this._httpClient.axiosRef.get("http://localhost:3000/user/me", {
                 headers:{
@@ -16,14 +16,12 @@ export class SocketService {
 
             const jsonData = {
                 "uid": response.data.id
-            }
+            };
 
-            console.log("user data: ", jsonData);
-
-            return jsonData; // Renvoyer uniquement les données nécessaires
+            return jsonData;
         } catch (error) {
             console.error("Erreur lors de la récupération des données utilisateur:", error);
-            throw error; // Gérer ou renvoyer l'erreur selon les besoins de l'application
+            throw error;
         }
     }
 }

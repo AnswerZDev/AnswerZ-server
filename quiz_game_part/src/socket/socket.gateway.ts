@@ -9,39 +9,34 @@ import { SocketService } from './socket.service';
 export class SocketGateway {
   @WebSocketServer() server: Server;
 
-  constructor(private readonly roomService: RoomService, private readonly socketService: SocketService ) {}
+  constructor(private readonly roomService: RoomService) {}
 
   handleConnection(client: Socket) {
     console.log('Client connecté :', client.id);
-      client.on('answer', (data) => {
-        console.log(`Message reçu de la room ${data.roomId}: ${data.message}`);
-      });
-
-      client.on('getRoomInfo', (roomId: string) => {
-        const roomInfo = this.roomService.getRoomInfo(roomId);
-        if (roomInfo) {
-          if(this.roomService.isClientInRoom(roomId, client.id)){
-            client.emit('roomInfo', roomInfo); // TODO USE client id not roomId
+    
+      if(client)
+        client.on('getRoomInfo', (roomId: string, userUid: string) => {
+          const roomInfo = this.roomService.getRoomInfo(roomId);
+          if (roomInfo) {
+            if (this.roomService.isClientInRoom(roomId, client.id)) {
+              client.emit('roomInfo', roomInfo);
+            }
           }
-        } else {
-          client.emit('roomInfoError', 'La room demandée n\'existe pas ou les informations sont indisponibles.');
-        }
-      });
+        });
+        
 
-      client.on('create-game', (arg) => {
-        const roomId = arg;
+      client.on('create-game', (arg1, arg2) => {
+        const roomId = arg1;
         const game = new Game(client.id);
-        this.roomService.createRoom(roomId, client, game);
+        this.roomService.createRoom(roomId, client, game, arg2.uid);
         this.server.emit('roomCreated', roomId);
         RoomDebug.displayActualRoomStates(this.server);
       });
 
-
-      client.on('join-game', (arg) => {
-        const roomId = arg;
-        this.roomService.joinRoom(roomId, client);
-        this.server.emit('joined-game', roomId);
-        this.server.to(roomId).emit('userJoined');
+      client.on('join-game', (arg1, arg2) => {
+        this.roomService.joinRoom(arg1, arg2.uid, client);
+        this.server.emit('joined-game', arg1);
+        this.server.to(arg1).emit('userJoined');
         RoomDebug.displayActualRoomStates(this.server);
       });
 

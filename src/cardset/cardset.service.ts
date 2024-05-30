@@ -9,7 +9,7 @@ import { Cardset } from "src/entities/Cardset.entity";
 export class CardsetService {
     constructor(
         @InjectRepository(Cardset)
-        private cardsetRepository: Repository<Cardset>
+        private cardsetRepository: Repository<Cardset>,
     ) {}
 
     async getMyCardsets(idUser: number, visibility?: string): Promise<Cardset[]> {
@@ -56,6 +56,7 @@ export class CardsetService {
             },
             relations: {
                 flashcards: true,
+
             }
         } as FindOneOptions<Cardset>;
 
@@ -68,5 +69,9 @@ export class CardsetService {
             relations: {
                 flashcards: true,
             }, });
+    }
+
+    async getCardsetPublicLiked(idUser: number) : Promise<Cardset[]>{
+        return 
     }
 }

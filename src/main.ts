@@ -8,7 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: 'http://localhost:4200', // Autoriser les requêtes depuis cette origine
+    origin: 'http://answerz.games:4200', // Autoriser les requêtes depuis cette origine
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Autoriser ces méthodes HTTP
     allowedHeaders: 'Content-Type, Accept, Authorization, skip-cache, cache-control', // Autoriser ces en-têtes
   });

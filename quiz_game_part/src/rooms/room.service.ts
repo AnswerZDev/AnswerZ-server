@@ -64,11 +64,14 @@ export class RoomService {
     return false;
   }
 
-  isUserInRoom(roomId, userUid) {
-    const room = this.rooms.get(roomId);
-    if (room && room.users.includes(userUid)) {
-        return true;
+
+  isClientAlreadyInroom(clientId) : boolean {
+    for (const room of this.rooms.values()) {
+        if (Array.isArray(room.users) && room.users.includes(clientId)) {
+            return true;
+        }
     }
+
     return false;
   }
 

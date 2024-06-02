@@ -13,6 +13,15 @@ export class SocketGateway {
 
   handleConnection(client: Socket) {
     console.log('Client connecté :', client.id);
+      
+      this.server.to(client.id).emit("connected");
+
+      client.on('give-user-infos', (arg) => {
+        console.log(this.isClientAlreadyInRooms(arg.uid));
+        if(this.isClientAlreadyInRooms(arg.uid)){
+          this.server.to(client.id).emit("already-in-room"); // add rtommid ro redirect
+        }
+      });
     
       if(client)
         client.on('getRoomInfo', (roomId: string, userUid: string) => {
@@ -33,12 +42,17 @@ export class SocketGateway {
         RoomDebug.displayActualRoomStates(this.server);
       });
 
+      
+
       client.on('join-game', (arg1, arg2) => {
         this.roomService.joinRoom(arg1, arg2.uid, client);
         this.server.emit('joined-game', arg1);
         this.server.to(arg1).emit('userJoined');
         RoomDebug.displayActualRoomStates(this.server);
       });
+
+      
+
 
 
       client.on('leave-game', (roomIdArg, isHostArg) => {
@@ -68,5 +82,8 @@ export class SocketGateway {
     // TODO
   }
 
+  isClientAlreadyInRooms(userUid : string) : boolean{
+    return this.roomService.isClientAlreadyInroom(userUid);
+  }
 }
 

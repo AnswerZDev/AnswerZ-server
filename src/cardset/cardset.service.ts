@@ -4,12 +4,17 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, FindOneOptions, Not, Repository } from "typeorm";
 import { identity } from "rxjs";
 import { Cardset } from "src/entities/Cardset.entity";
+import { User } from "src/entities/User.entity";
+import { UserCardsetLiked } from "src/entities/userCardsetLiked.entity";
+import { isDataURI } from "class-validator";
 
 @Injectable()
 export class CardsetService {
     constructor(
         @InjectRepository(Cardset)
         private cardsetRepository: Repository<Cardset>,
+        @InjectRepository(UserCardsetLiked)
+        private userCardsetLikedRepository: Repository<UserCardsetLiked>
     ) {}
 
     async getMyCardsets(idUser: number, visibility?: string): Promise<Cardset[]> {
@@ -56,7 +61,6 @@ export class CardsetService {
             },
             relations: {
                 flashcards: true,
-
             }
         } as FindOneOptions<Cardset>;
 
@@ -71,7 +75,61 @@ export class CardsetService {
             }, });
     }
 
-    async getCardsetPublicLiked(idUser: number) : Promise<Cardset[]>{
-        return 
+    async getCardsetPublicLiked(idUser: string) : Promise<any>{
+
+        // const query = this.userCardsetLikedRepository.createQueryBuilder('userCardsetLiked')
+        //         .where('userCardsetLiked.userId = :id', {id : idUser});
+
+        const userCardsetLikedRecords = await this.cardsetRepository.find({
+            relations: {
+                usersLiked: true,
+            },
+        });
+
+        console.log(userCardsetLikedRecords);
+
+        return userCardsetLikedRecords;
+        // return await query.getMany();
+    
+        // const cardsets = await this.userCardsetLikedRepository.find(
+        //     {
+        //         where: {
+        //             cardsetId: 1
+        //         }
+        //     }
+        // );
+        // return cardsets;
+        // const options = {
+        //     where: {
+        //         author: { id: idUser },
+        //         visibility: 'Public'
+        //     },
+        //     relations: {
+        //         usersLiked: true,
+        //     }
+        // } as FindOneOptions<Cardset>;
+
+        // const cardsets = await this.cardsetRepository.find(options);
+        // return cardsets;
+        // return await this.cardsetRepository.findOne({
+        //     where: {
+        //         id: 1,
+        //     }, 
+        //     relations: {
+        //         flashcards : true
+        //     }, 
+        // });
+        // const query = this.cardsetRepository
+        //     .createQueryBuilder('cardset')
+        //     .innerJoin('cardset.usersLiked', 'userCardsetLiked')
+        //     .where('userCardsetLiked.user_id = :idUser', { idUser })
+        //     .getMany()
+
+        // return query;
+
+        // return await this.cardsetRepository.find({where: {id: idUser}, 
+        //     relations: {
+        //         flashcards: true,
+        //     }, });
     }
 }

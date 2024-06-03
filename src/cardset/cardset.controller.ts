@@ -230,6 +230,17 @@ export class CardsetController {
     }
   }
 
+  @ApiBearerAuth("access-token")
+  @Get('/CardsetLike/all')
+  async getCardsetUserLiked(@Req() req){
+    try {
+      const datas = await this.cardsetService.getCardsetPublicLiked(req.user.uid);
+      return datas;
+    } catch (error) {
+      throw new HttpException('Error data not found', HttpStatus.NOT_FOUND);
+    }
+  }
+
 
 
 }

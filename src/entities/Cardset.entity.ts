@@ -4,6 +4,7 @@ import {
   Entity,
   IsNull,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -49,8 +50,21 @@ export class Cardset {
   @OneToMany(() => Cardset, "cardSet")
   private accessControls: AccessControl[];
 
+  @ManyToMany(() => User,
+    user => user.getCardsetsLiked,
+    { cascade: true })
+  private usersLiked: User[];
+
   constructor(cardset: Partial<Cardset>) {
     Object.assign(this, cardset);
+  }
+
+  public getUsersLiked(): User[]{
+    return this.usersLiked;
+  }
+
+  public setUsersLiked(users: User[]){
+    this.usersLiked = users;
   }
 
   public getId(): number {

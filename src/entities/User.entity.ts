@@ -17,8 +17,23 @@ export class User {
     @Column({name: 'photo', length: 255, nullable: true})
     private profilePicture: string;
 
-    @ManyToMany(() => Cardset)
-    @JoinTable()
+    @ManyToMany(() => Cardset,
+        cardset => cardset.getUsersLiked,
+        { cascade: true }
+    )
+    @JoinTable(
+        {
+            name: 'userCardsetLiked',
+            joinColumn: {
+              name: 'user_id',
+              referencedColumnName: 'id',
+            },
+            inverseJoinColumn: {
+              name: 'cardset_id',
+              referencedColumnName: 'id',
+            },
+        }
+    )
     private cardsetsLiked: Cardset[];
 
     public getId(): string {

@@ -1,6 +1,8 @@
 import {
     Controller,
     Get,
+    HttpException,
+    HttpStatus,
     InternalServerErrorException,
     Patch, Post,
     Req,
@@ -89,5 +91,18 @@ export class UsersController {
 
         user.setProfilePicture(photoProfile.originalname);
         await this.userService.changeUser(user);
+    }
+
+    @ApiBearerAuth("access-token")
+    @Get('/CardsetLiked')
+    async getCardsetUserLiked(@Req() req){
+        try {
+            //console.log("test");
+            //let user = await this.userService.findUserById(req.user.uid);
+            let data: any = await this.userService.getCardsetPublicLiked(req.user.uid);
+            return data;
+        } catch (error) {
+            throw new HttpException('Error data not found', HttpStatus.NOT_FOUND);
+        }
     }
 }

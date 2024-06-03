@@ -5,9 +5,15 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { Cardset } from "../entities/Cardset.entity";
 import { AuthMiddleware } from "src/middleware/Auth.middleware";
 import { SharedModule } from "src/shared/shared.module";
+import { User } from "src/entities/User.entity";
+import { UserCardsetLiked } from "src/entities/userCardsetLiked.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Cardset]), SharedModule],
+  imports: [TypeOrmModule.forFeature(
+    [
+      Cardset,
+      UserCardsetLiked
+    ]), SharedModule],
   controllers: [CardsetController],
   providers: [CardsetService],
 })

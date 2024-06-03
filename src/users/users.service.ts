@@ -62,4 +62,47 @@ export class UsersService {
 
         return numberOfFlashcards;
     }
+
+    async getCardsetPublicLiked(idUser: string) : Promise<Cardset[]>{
+        return await this._cardSetRepository.find(
+            {where: {id: 1}, 
+            relations: {
+                flashcards: true,
+            }, 
+        });
+    }
+        // return this.userRepository.findOne({
+        //     where: {
+        //         id: idUser
+        //     }
+        // } as FindOneOptions<User>);
+
+        // return this.userRepository.findOne({
+        //     where: {
+        //         id: idUser
+        //     }
+        // } as FindOneOptions<User>);
+
+        // const loadCardsetLike = await this.userRepository.find({
+        //     where: {
+        //         author: {
+        //             id: idUser
+        //         }
+        //     }
+        //     relations: {
+        //         albums: true,
+        //     },
+        // });
+
+        // const query = this.userRepository
+        //     .createQueryBuilder('cardset')
+        //     .innerJoin('cardset.usersLiked', 'userCardsetLiked')
+        //     .where('userCardsetLiked.user_id = :idUser', { idUser })
+        //     .getMany()
+
+        // return await this.cardsetRepository.find({where: {id: idUser}, 
+        //     relations: {
+        //         flashcards: true,
+        //     }, });
+    
 }

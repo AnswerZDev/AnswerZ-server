@@ -17,26 +17,26 @@ export class SocketGateway {
       this.server.to(client.id).emit("connected");
 
       client.on('give-user-infos', (arg) => {
-        console.log(this.isClientAlreadyInRooms(arg.uid));
-        if(this.isClientAlreadyInRooms(arg.uid)){
-          this.server.to(client.id).emit("already-in-room"); // add rtommid ro redirect
+        const roomId = this.isClientAlreadyInRooms(arg.uid);
+
+        if(roomId != null){
+          this.roomService.joinRoom(roomId, client);
+          this.server.to(client.id).emit("already-in-room", roomId);
         }
       });
-    
+
       if(client)
         client.on('getRoomInfo', (roomId: string, userUid: string) => {
           const roomInfo = this.roomService.getRoomInfo(roomId);
           if (roomInfo) {
-            if (this.roomService.isClientInRoom(roomId, client.id)) {
               client.emit('roomInfo', roomInfo);
-            }
           }
         });
         
 
       client.on('create-game', (arg1, arg2) => {
         const roomId = arg1;
-        const game = new Game(client.id);
+        const game = new Game(arg2.uid);
         this.roomService.createRoom(roomId, client, game, arg2.uid);
         this.server.emit('roomCreated', roomId);
         RoomDebug.displayActualRoomStates(this.server);
@@ -45,7 +45,8 @@ export class SocketGateway {
       
 
       client.on('join-game', (arg1, arg2) => {
-        this.roomService.joinRoom(arg1, arg2.uid, client);
+        console.log(arg2);
+        this.roomService.joinRoom(arg1, client, arg2.uid);
         this.server.emit('joined-game', arg1);
         this.server.to(arg1).emit('userJoined');
         RoomDebug.displayActualRoomStates(this.server);
@@ -55,10 +56,10 @@ export class SocketGateway {
 
 
 
-      client.on('leave-game', (roomIdArg, isHostArg) => {
+      client.on('leave-game', (roomIdArg, gameHostArg) => {
         const roomId = roomIdArg;
-        const isHost = isHostArg;
-        
+
+        /*
         if(isHost){
           this.server.to(roomId).emit("host-leave");
           this.server.socketsLeave(roomId);
@@ -69,6 +70,7 @@ export class SocketGateway {
         }
         
         RoomDebug.displayActualRoomStates(this.server);
+        */
       });
 
 
@@ -82,8 +84,8 @@ export class SocketGateway {
     // TODO
   }
 
-  isClientAlreadyInRooms(userUid : string) : boolean{
-    return this.roomService.isClientAlreadyInroom(userUid);
+  isClientAlreadyInRooms(userUid : string) : string{
+    return this.roomService.isClientAlreadyInRoom(userUid);
   }
 }
 

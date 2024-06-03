@@ -2,6 +2,8 @@ import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import * as express from 'express';
+import helmet from "helmet";
+
 const path = require('path');
 
 async function bootstrap() {
@@ -35,7 +37,9 @@ async function bootstrap() {
   //app.use(express.urlencoded({ limit: '100mb', extended: true }));
 
   app.use(express.static('public'));
+  app.use(helmet());
 
   await app.listen(3000);
 }
 bootstrap();
+

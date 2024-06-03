@@ -11,8 +11,6 @@ import { CardsetController } from "./cardset/cardset.controller";
 import { CardsetModule } from "./cardset/cardset.module";
 import { FlashcardModule } from "./flashcard/flashcard.module";
 import { FlashcardController } from "./flashcard/flashcard.controller";
-import { AnswerModule } from "./answer/answer.module";
-import { AnswerController } from "./answer/answer.controller";
 import { AccessControlModule } from "./access-control/access-control.module";
 import { AccessControlController } from "./access-control/access-control.controller";
 import {SharedModule} from "./shared/shared.module";
@@ -25,7 +23,6 @@ import { join } from 'path';
     AuthModule,
     CardsetModule,
     FlashcardModule,
-    AnswerModule,
     AccessControlModule,
     ConfigModule.forRoot({
       isGlobal: true,
@@ -53,7 +50,6 @@ import { join } from 'path';
     AuthController,
     CardsetController,
     FlashcardController,
-    AnswerController,
     AccessControlController,
   ],
   providers: [AppService],

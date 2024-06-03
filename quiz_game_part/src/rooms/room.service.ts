@@ -34,12 +34,14 @@ export class RoomService {
   
 
 
-  joinRoom(roomId: string, userUid: string, client: Socket): void {
+  joinRoom(roomId: string, client: Socket,  userUid: string = null): void {
     try {
       if (this.rooms.has(roomId)) {
         const room = this.rooms.get(roomId);
-        if (room) {
-          room.clients.push(userUid);
+        if (room) {          
+          if(client.id){
+            room.clients.push(client.id);
+          }
           room.game.nOfActualPlayers += 1;
           client.join(roomId);
           console.log(this.rooms);
@@ -65,15 +67,15 @@ export class RoomService {
   }
 
 
-  isClientAlreadyInroom(clientId) : boolean {
-    for (const room of this.rooms.values()) {
+  isClientAlreadyInRoom(clientId) {
+    for (const [roomId, room] of this.rooms.entries()) {
         if (Array.isArray(room.users) && room.users.includes(clientId)) {
-            return true;
+            return roomId;
         }
     }
+    return null;
+}
 
-    return false;
-  }
 
 
 

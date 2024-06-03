@@ -68,7 +68,7 @@ export class AuthService {
                     throw new InternalServerErrorException("Mot de passe trop faible");
                     break;
                 default:
-                    throw new InternalServerErrorException("Une erreur est survenue pendant la création de l'utilisateur");
+                    throw new InternalServerErrorException(error);
                     break;
             }
         }

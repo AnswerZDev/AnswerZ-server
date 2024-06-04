@@ -22,7 +22,7 @@ jobs:
 
     - name: env_file deploy
       run: |
-        ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "bash -s" < $GITHUB_WORKSPACE/.github/workflows/scripts/deploy_env_file.sh "${{ secrets.DATABASE_CONTAINER_NAME }} ${{ secrets.DATABASE_TYPE }} ${{ secrets.DATABASE_HOST }} ${{ secrets.DATABASE_PORT }} ${{ secrets.DATABASE_USER }} ${{ secrets.DATABASE_PASSWORD }} ${{ secrets.DATABASE_NAME }} ${{ secrets.DATABASE_RETRY_ATTEMPTS }}"
+        ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "bash -s" < $GITHUB_WORKSPACE/.github/workflows/scripts/deploy_env_file.sh "${{ secrets.DATABASE_CONTAINER_NAME }} ${{ secrets.DATABASE_TYPE }} ${{ secrets.DATABASE_HOST }} ${{ secrets.DATABASE_PORT }} ${{ secrets.DATABASE_USER }} ${{ secrets.DATABASE_PASSWORD }} ${{ secrets.DATABASE_NAME }} ${{ secrets.DATABASE_RETRY_ATTEMPTS }} ${{ secrets.FIREBASE_KEY }}"
     
     - name: database deploy
       run: |

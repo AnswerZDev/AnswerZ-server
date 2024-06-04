@@ -8,7 +8,8 @@ if [ -e "$ENV_FILE" ]; then
 else
     touch "$ENV_FILE"
 
-    echo "DATABASE_CONTAINER_NAME=$1
+    echo "API_KEY=$9
+DATABASE_CONTAINER_NAME=$1
 DATABASE_TYPE=$2
 DATABASE_HOST=$3
 DATABASE_PORT=$4

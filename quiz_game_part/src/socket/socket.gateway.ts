@@ -3,7 +3,8 @@ import { Server, Socket } from 'socket.io';
 import { RoomService } from '../rooms/room.service';
 import { Game } from 'src/Models/Game';
 import { RoomDebug } from 'debug/rooms.debug';
-import { SocketService } from './socket.service';
+
+
 
 @WebSocketGateway( { cors: true})
 export class SocketGateway {
@@ -56,13 +57,15 @@ export class SocketGateway {
 
 
 
-      client.on('leave-game', (roomIdArg, gameHostArg) => {
+      client.on('leave-game', (roomIdArg, useruidArg) => {
         const roomId = roomIdArg;
 
-        /*
-        if(isHost){
+        const roomHost =  this.roomService.rooms.get(roomId).game.host;
+
+        if(useruidArg.uid == roomHost){
           this.server.to(roomId).emit("host-leave");
           this.server.socketsLeave(roomId);
+          this.roomService.leaveRoom(roomId, client);
         }
         else{
           client.leave(roomId);
@@ -70,7 +73,6 @@ export class SocketGateway {
         }
         
         RoomDebug.displayActualRoomStates(this.server);
-        */
       });
 
 
@@ -81,7 +83,7 @@ export class SocketGateway {
   }
 
   handleDisconnect(client: Socket) {
-    // TODO
+    console.log("user disconnected");
   }
 
   isClientAlreadyInRooms(userUid : string) : string{

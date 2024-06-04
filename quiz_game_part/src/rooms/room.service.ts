@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { RoomDebug } from 'debug/rooms.debug';
 import { Server, Socket } from 'socket.io';
 import { Game } from 'src/Models/Game';
 import { SocketService } from 'src/socket/socket.service';
@@ -41,6 +42,9 @@ export class RoomService {
         if (room) {          
           if(client.id){
             room.clients.push(client.id);
+            if(userUid){
+              room.users.push(userUid);
+            }
           }
           room.game.nOfActualPlayers += 1;
           client.join(roomId);
@@ -74,11 +78,7 @@ export class RoomService {
         }
     }
     return null;
-}
-
-
-
-
+  }
 
   getRoomInfo(roomId: string): any {
     if (this.rooms.has(roomId)) {
@@ -89,18 +89,22 @@ export class RoomService {
   }
 
   leaveRoom(roomId: string, client: Socket): void {
+
     if (this.rooms.has(roomId)) {
       const room = this.rooms.get(roomId);
       const index = room.clients.indexOf(client.id);
-      if (index !== -1) {
+      if (index!== -1) {
         room.clients.splice(index, 1);
+        room.users.splice(index, 1);
         room.game.nOfActualPlayers -= 1;
+  
         if (room.clients.length === 0) {
           this.rooms.delete(roomId);
         }
       }
+  
+      console.log(this.rooms);
     }
-    console.log(this.rooms);
   }
 
   static getAvailableRooms(server: Server): Record<string, string[]> {

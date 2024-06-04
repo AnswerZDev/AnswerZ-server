@@ -19,3 +19,15 @@ services:
     restart: always
     ports:
       - 8080:8080
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nest-docker-postgres
+    environment:
+      - PORT=3000
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./src:/app/src

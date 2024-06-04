@@ -1,5 +1,6 @@
 import {
     Controller,
+    ExecutionContext,
     Get,
     HttpException,
     HttpStatus,
@@ -31,11 +32,12 @@ export class UsersController {
 
     @ApiBearerAuth('access-token')
     @Get("me")
-    async currentUser(@Req() req: any) {
+    async currentUser(@Req() req) {
         try {
+            
             // Get user from database
             let user: any = await this.userService.findUserById(req.user.uid);
-
+            
             // set the url of the profile picture
             user.profilePicture = await this.userService.getUrlProfilePicture(user.id, user.profilePicture);
 
@@ -50,6 +52,19 @@ export class UsersController {
                 ...firebaseUser
             }
         } catch (error) {
+            console.error(error);
+            throw new InternalServerErrorException("Error while getting user");
+        }
+    }
+
+    @ApiBearerAuth('access-token')
+    @Get("/CardsetLiked/all")
+    async getCardsetUserLikedTest(@Req() req){
+        try {
+            // let test: any = await this.userService.findUserById(req.user.uid);
+            let user: any = await this.userService.getCardsetPublicLikedTest('');
+            return user;
+        }catch (error) {
             console.error(error);
             throw new InternalServerErrorException("Error while getting user");
         }
@@ -93,16 +108,4 @@ export class UsersController {
         await this.userService.changeUser(user);
     }
 
-    @ApiBearerAuth("access-token")
-    @Get('/CardsetLiked')
-    async getCardsetUserLiked(@Req() req){
-        try {
-            //console.log("test");
-            //let user = await this.userService.findUserById(req.user.uid);
-            let data: any = await this.userService.getCardsetPublicLiked(req.user.uid);
-            return data;
-        } catch (error) {
-            throw new HttpException('Error data not found', HttpStatus.NOT_FOUND);
-        }
-    }
 }

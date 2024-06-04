@@ -4,6 +4,7 @@ import {
   Entity,
   IsNull,
   JoinColumn,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -50,22 +51,33 @@ export class Cardset {
   @OneToMany(() => Cardset, "cardSet")
   private accessControls: AccessControl[];
 
-  @ManyToMany(() => User,
-    user => user.getCardsetsLiked,
-    { cascade: true })
-  private usersLiked: User[];
+  // @ManyToMany(() => User)
+  // @JoinTable(
+  //     {
+  //         name: 'userCardsetLiked',
+  //         joinColumn: {
+  //           name: 'cardset_id',
+  //           referencedColumnName: 'id',
+  //         },
+  //         inverseJoinColumn: {
+  //           name: 'user_id',
+  //           referencedColumnName: 'id',
+  //         },
+  //     }
+  // )
+  // public usersLiked: User[];
 
   constructor(cardset: Partial<Cardset>) {
     Object.assign(this, cardset);
   }
 
-  public getUsersLiked(): User[]{
-    return this.usersLiked;
-  }
+  // public getUsersLiked(): User[]{
+  //   return this.usersLiked;
+  // }
 
-  public setUsersLiked(users: User[]){
-    this.usersLiked = users;
-  }
+  // public setUsersLiked(users: User[]){
+  //   this.usersLiked = users;
+  // }
 
   public getId(): number {
     return this.id;

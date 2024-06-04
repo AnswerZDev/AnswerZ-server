@@ -62,14 +62,17 @@ export class UsersService {
 
         return numberOfFlashcards;
     }
+    
 
-    async getCardsetPublicLiked(idUser: string) : Promise<Cardset[]>{
-        return await this._cardSetRepository.find(
-            {where: {id: 1}, 
+    async getCardsetPublicLikedTest(idUser: string) : Promise<any>{
+        return this.userRepository.findOne({
+            where: {
+                id: idUser
+            },
             relations: {
-                flashcards: true,
-            }, 
-        });
+                cardsetsLiked: true,
+            },
+        } as FindOneOptions<User>);
     }
         // return this.userRepository.findOne({
         //     where: {

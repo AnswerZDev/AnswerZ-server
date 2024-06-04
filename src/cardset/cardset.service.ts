@@ -5,7 +5,7 @@ import { FindManyOptions, FindOneOptions, Not, Repository } from "typeorm";
 import { identity } from "rxjs";
 import { Cardset } from "src/entities/Cardset.entity";
 import { User } from "src/entities/User.entity";
-import { UserCardsetLiked } from "src/entities/userCardsetLiked.entity";
+// import { UserCardsetLiked } from "src/entities/userCardsetLiked.entity";
 import { isDataURI } from "class-validator";
 
 @Injectable()
@@ -13,8 +13,8 @@ export class CardsetService {
     constructor(
         @InjectRepository(Cardset)
         private cardsetRepository: Repository<Cardset>,
-        @InjectRepository(UserCardsetLiked)
-        private userCardsetLikedRepository: Repository<UserCardsetLiked>
+        // @InjectRepository(UserCardsetLiked)
+        // private userCardsetLikedRepository: Repository<UserCardsetLiked>
     ) {}
 
     async getMyCardsets(idUser: number, visibility?: string): Promise<Cardset[]> {
@@ -76,19 +76,29 @@ export class CardsetService {
     }
 
     async getCardsetPublicLiked(idUser: string) : Promise<any>{
+        return await this.cardsetRepository.findOne({
+            // relations: {
+            //     usersLiked: true,
+            // },
+            where: { id: 1 }
+        , });
+        
+        // return await this.userCardsetLikedRepository.find({where: {userId: 'jJV0ia08mBZRjPUF84Woew9q7Go2'}, 
+        // });
+        
 
         // const query = this.userCardsetLikedRepository.createQueryBuilder('userCardsetLiked')
         //         .where('userCardsetLiked.userId = :id', {id : idUser});
 
-        const userCardsetLikedRecords = await this.cardsetRepository.find({
-            relations: {
-                usersLiked: true,
-            },
-        });
+        // const userCardsetLikedRecords = await this.cardsetRepository.find({
+        //     relations: {
+        //         usersLiked: true,
+        //     },
+        // });
 
-        console.log(userCardsetLikedRecords);
+        // console.log(userCardsetLikedRecords);
 
-        return userCardsetLikedRecords;
+        // return userCardsetLikedRecords;
         // return await query.getMany();
     
         // const cardsets = await this.userCardsetLikedRepository.find(

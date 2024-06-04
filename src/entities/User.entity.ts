@@ -17,10 +17,7 @@ export class User {
     @Column({name: 'photo', length: 255, nullable: true})
     private profilePicture: string;
 
-    @ManyToMany(() => Cardset,
-        cardset => cardset.getUsersLiked,
-        { cascade: true }
-    )
+    @ManyToMany(() => Cardset)
     @JoinTable(
         {
             name: 'userCardsetLiked',
@@ -34,7 +31,7 @@ export class User {
             },
         }
     )
-    private cardsetsLiked: Cardset[];
+    public cardsetsLiked: Cardset[];
 
     public getId(): string {
         return this.id;
@@ -72,11 +69,11 @@ export class User {
         this.profilePicture = profilePicture;
     }
 
-    public getCardsetsLiked(): Cardset[]{
-        return this.cardsetsLiked;
-    }
+    // public getCardsetsLiked(): Cardset[]{
+    //     return this.cardsetsLiked;
+    // }
 
-    public setCardsetsLiked(cardsets: Cardset[]): void{
-        this.cardsetsLiked = cardsets;
-    }
+    // public setCardsetsLiked(cardsets: Cardset[]): void{
+    //     this.cardsetsLiked = cardsets;
+    // }
 }

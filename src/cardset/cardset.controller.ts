@@ -102,8 +102,7 @@ export class CardsetController {
       const datas = await this.cardsetService.createOrUpdate(data);
       return datas;
     } catch (error) {
-      console.dir(error)
-      throw new HttpException("Error creating cardset", HttpStatus.BAD_REQUEST);
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
     }
   }
 

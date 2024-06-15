@@ -2,7 +2,6 @@ import { WebSocketGateway, WebSocketServer, SubscribeMessage, MessageBody } from
 import { Server, Socket } from 'socket.io';
 import { RoomService } from '../rooms/room.service';
 import { Game } from 'src/Models/Game';
-import { RoomDebug } from 'debug/rooms.debug';
 
 
 
@@ -40,7 +39,6 @@ export class SocketGateway {
         const game = new Game(arg2.uid);
         this.roomService.createRoom(roomId, client, game, arg2.uid);
         this.server.emit('roomCreated', roomId);
-        RoomDebug.displayActualRoomStates(this.server);
       });
 
       
@@ -50,7 +48,6 @@ export class SocketGateway {
         this.roomService.joinRoom(arg1, client, arg2.uid);
         this.server.emit('joined-game', arg1);
         this.server.to(arg1).emit('userJoined');
-        RoomDebug.displayActualRoomStates(this.server);
       });
 
       
@@ -71,13 +68,20 @@ export class SocketGateway {
           this.roomService.leaveRoom(roomId, client);
         }
         
-        RoomDebug.displayActualRoomStates(this.server);
       });
 
 
       client.on('start-game', (arg) => {
         const roomId = arg;
+        this.roomService.setGameStateToPlay(roomId);
         this.server.to(roomId).emit('game-started');
+        console.log(this.roomService.rooms)
+      });
+
+      client.on('ready-to-play', (arg) => {
+        const roomId = arg;
+        const question = this.roomService.playGame(roomId);
+        this.server.to(roomId).emit('question', question);
       });
   }
 

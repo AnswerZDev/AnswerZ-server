@@ -62,4 +62,50 @@ export class UsersService {
 
         return numberOfFlashcards;
     }
+    
+
+    async getCardsetPublicLikedTest(idUser: string) : Promise<any>{
+        return this.userRepository.findOne({
+            where: {
+                id: idUser
+            },
+            relations: {
+                cardsetsLiked: true,
+            },
+        } as FindOneOptions<User>);
+    }
+        // return this.userRepository.findOne({
+        //     where: {
+        //         id: idUser
+        //     }
+        // } as FindOneOptions<User>);
+
+        // return this.userRepository.findOne({
+        //     where: {
+        //         id: idUser
+        //     }
+        // } as FindOneOptions<User>);
+
+        // const loadCardsetLike = await this.userRepository.find({
+        //     where: {
+        //         author: {
+        //             id: idUser
+        //         }
+        //     }
+        //     relations: {
+        //         albums: true,
+        //     },
+        // });
+
+        // const query = this.userRepository
+        //     .createQueryBuilder('cardset')
+        //     .innerJoin('cardset.usersLiked', 'userCardsetLiked')
+        //     .where('userCardsetLiked.user_id = :idUser', { idUser })
+        //     .getMany()
+
+        // return await this.cardsetRepository.find({where: {id: idUser}, 
+        //     relations: {
+        //         flashcards: true,
+        //     }, });
+    
 }

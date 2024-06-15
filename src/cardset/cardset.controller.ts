@@ -68,7 +68,8 @@ export class CardsetController {
       );
     }
   }
-
+  
+  @ApiBearerAuth("access-token")
   @Get(":id")
   async getCardsetById(@Param("id") id: number, @Req() req){
     try {
@@ -101,8 +102,7 @@ export class CardsetController {
       const datas = await this.cardsetService.createOrUpdate(data);
       return datas;
     } catch (error) {
-      console.dir(error)
-      throw new HttpException("Error creating cardset", HttpStatus.BAD_REQUEST);
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -205,4 +205,41 @@ export class CardsetController {
 
     await this.cardsetService.createOrUpdate(cardset);
   }
+
+  @ApiBearerAuth("access-token")
+  @Get('all/public')
+  async getAllCardsetPublic( @Req() req) {
+    console.log(req.user.uid);
+    try {
+      const datas = await this.cardsetService.getAllCardsetPublic(req.user.uid);
+      console.log(datas)
+      return datas;
+    } catch (error) {
+      throw new HttpException('Error data not found', HttpStatus.NOT_FOUND);
+    }
+  }
+
+  @Get('/one')
+  async getOne() {
+    try {
+      const datas = await this.cardsetService.getOneCardset(4);
+      return datas;
+    } catch (error) {
+      throw new HttpException('Error data not found', HttpStatus.NOT_FOUND);
+    }
+  }
+
+  @ApiBearerAuth("access-token")
+  @Get('/CardsetLike/all')
+  async getCardsetUserLiked(@Req() req){
+    try {
+      const datas = await this.cardsetService.getCardsetPublicLiked(req.user.uid);
+      return datas;
+    } catch (error) {
+      throw new HttpException('Error data not found', HttpStatus.NOT_FOUND);
+    }
+  }
+
+
+
 }

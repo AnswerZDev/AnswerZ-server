@@ -11,6 +11,10 @@ import { AccessControlModule } from "./access-control/access-control.module";
 import {SharedModule} from "./shared/shared.module";
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { Cardset } from "./entities/Cardset.entity";
+import { Flashcard } from "./entities/Flashcard.entity";
+import { AccessControl } from "./entities/AccessControl.entity";
+import { User } from "./entities/User.entity";
 
 @Module({
   imports: [
@@ -29,9 +33,8 @@ import { join } from 'path';
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      autoLoadEntities: true,
+      entities: [Cardset, Flashcard, User, AccessControl],
       synchronize: true,
-      retryAttempts: parseInt(process.env.DATABASE_RETRY_ATTEMPTS),
     }),
     SharedModule,
     ServeStaticModule.forRoot({

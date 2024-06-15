@@ -1,4 +1,4 @@
-import {Column, Entity, JoinColumn, OneToMany} from "typeorm";
+import {Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany} from "typeorm";
 import {Cardset} from "./Cardset.entity";
 import {AccessControl} from "./AccessControl.entity";
 import {Role} from "../enum/role.enum";
@@ -16,6 +16,22 @@ export class User {
 
     @Column({name: 'photo', length: 255, nullable: true})
     private profilePicture: string;
+
+    @ManyToMany(() => Cardset)
+    @JoinTable(
+        {
+            name: 'userCardsetLiked',
+            joinColumn: {
+              name: 'user_id',
+              referencedColumnName: 'id',
+            },
+            inverseJoinColumn: {
+              name: 'cardset_id',
+              referencedColumnName: 'id',
+            },
+        }
+    )
+    public cardsetsLiked: Cardset[];
 
     public getId(): string {
         return this.id;
@@ -53,4 +69,11 @@ export class User {
         this.profilePicture = profilePicture;
     }
 
+    // public getCardsetsLiked(): Cardset[]{
+    //     return this.cardsetsLiked;
+    // }
+
+    // public setCardsetsLiked(cardsets: Cardset[]): void{
+    //     this.cardsetsLiked = cardsets;
+    // }
 }

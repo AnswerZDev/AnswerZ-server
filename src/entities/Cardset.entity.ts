@@ -1,8 +1,11 @@
 import {
+  BaseEntity,
   Column,
   Entity,
   IsNull,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -15,7 +18,7 @@ import { Exclude, Expose, Transform } from "class-transformer";
 @Entity()
 export class Cardset {
   @PrimaryGeneratedColumn({ name: "CardSetId" })
-  private id: number;
+  public id: number;
 
   @ManyToOne(() => User, "cardsets")
   @JoinColumn({ name: "authorId", referencedColumnName: "id" })
@@ -48,9 +51,33 @@ export class Cardset {
   @OneToMany(() => Cardset, "cardSet")
   private accessControls: AccessControl[];
 
+  // @ManyToMany(() => User)
+  // @JoinTable(
+  //     {
+  //         name: 'userCardsetLiked',
+  //         joinColumn: {
+  //           name: 'cardset_id',
+  //           referencedColumnName: 'id',
+  //         },
+  //         inverseJoinColumn: {
+  //           name: 'user_id',
+  //           referencedColumnName: 'id',
+  //         },
+  //     }
+  // )
+  // public usersLiked: User[];
+
   constructor(cardset: Partial<Cardset>) {
     Object.assign(this, cardset);
   }
+
+  // public getUsersLiked(): User[]{
+  //   return this.usersLiked;
+  // }
+
+  // public setUsersLiked(users: User[]){
+  //   this.usersLiked = users;
+  // }
 
   public getId(): number {
     return this.id;
@@ -132,11 +159,11 @@ export class Cardset {
     this.image = image;
   }
 
-  public getCategory(): string {
+  public getCategory(): string{
     return this.category;
   }
 
-  public setCategory(category: string): void {
-    this.category = category;
+  public setCategory(new_category): void{
+    this.category = new_category;
   }
 }

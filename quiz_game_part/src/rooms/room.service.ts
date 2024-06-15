@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { RoomDebug } from 'debug/rooms.debug';
 import { Server, Socket } from 'socket.io';
 import { Game } from 'src/Models/Game';
-import { SocketService } from 'src/socket/socket.service';
 
 @Injectable()
 export class RoomService {
@@ -102,8 +100,6 @@ export class RoomService {
           this.rooms.delete(roomId);
         }
       }
-  
-      console.log(this.rooms);
     }
   }
 

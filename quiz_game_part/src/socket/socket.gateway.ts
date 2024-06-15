@@ -54,8 +54,7 @@ export class SocketGateway {
       });
 
       
-
-
+    
 
       client.on('leave-game', (roomIdArg, useruidArg) => {
         const roomId = roomIdArg;

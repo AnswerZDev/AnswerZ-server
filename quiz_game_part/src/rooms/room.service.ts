@@ -115,8 +115,7 @@ export class RoomService {
   playGame(roomId: string) {
     const room = this.rooms.get(roomId);
     if (room && room.game) {
-      const actualQuestionIndex = room.game.actualQuestionIndex + 1;
-      room.game.actualQuestionIndex = actualQuestionIndex;
+      const actualQuestionIndex = room.game.actualQuestionIndex;
       return room.game.questions[actualQuestionIndex];
     } else {
       throw new Error(`Room or game not found for roomId: ${roomId}`);

@@ -6,6 +6,7 @@ import { Game } from 'src/Models/Game';
 @WebSocketGateway({ cors: true })
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
+  actualQuestionIndex : number = 0;
 
   constructor(private readonly roomService: RoomService) {}
 
@@ -56,26 +57,29 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       }
     });
 
+    client.on('ask-question', (arg) => {
+      const question = this.roomService.getQuestion(arg, this.actualQuestionIndex);
+
+      this.server.to(client.id).emit('next-question', question);
+    })
+
     client.on('start-game', async (roomId: string) => {
       this.roomService.setGameStateToPlay(roomId);
       this.server.to(roomId).emit('game-started');
 
       const nbrQuestions = this.roomService.getNumberOfQuestions(roomId);
-      for (let i = 0; i <= nbrQuestions - 1; i++) {
-        await this.askQuestion(roomId, i);
+      for (this.actualQuestionIndex; this.actualQuestionIndex <= nbrQuestions - 1; this.actualQuestionIndex++) {
+        await this.askQuestion(roomId, this.actualQuestionIndex);
       }
     });
 
-    client.on('ask-question', (arg) => {
-      const roomId = arg;
-      const question = this.roomService.playGame(roomId);
-      this.server.to(roomId).emit('question', question);
-    });
   }
 
   async askQuestion(roomId: string, questionNumber: number) {
     const question = this.roomService.getQuestion(roomId, questionNumber);
-    //%this.server.to(roomId).emit('question', question);
+    
+    this.server.to(roomId).emit('next-question', question);
+    
     console.log(question)
 
     await new Promise<void>(resolve => {

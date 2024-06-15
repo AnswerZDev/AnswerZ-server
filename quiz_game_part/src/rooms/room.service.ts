@@ -111,6 +111,14 @@ export class RoomService {
     }
   }
 
+  getNumberOfQuestions(roomId: string){
+    return this.rooms.get(roomId).game.questions.length;
+  }
+
+  getQuestion(roomId : string, questionNumber : number){
+    return this.rooms.get(roomId).game.questions[questionNumber];
+  }
+
 
   playGame(roomId: string) {
     const room = this.rooms.get(roomId);

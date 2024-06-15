@@ -22,7 +22,6 @@ export class RoomService {
           room.game.nOfActualPlayers += 1;
         }
         client.join(roomId);
-        console.log(this.rooms);
       } else {
         throw new Error(`Impossible de récupérer la salle après sa création. ID de salle : ${roomId}`);
       }
@@ -103,22 +102,24 @@ export class RoomService {
     }
   }
 
-  static getAvailableRooms(server: Server): Record<string, string[]> {
-    const adapter = server.sockets.adapter;
-    const rooms = adapter.rooms;
-
-    const availableRooms: Record<string, string[]> = {};
-
-    if (rooms) {
-      rooms.forEach((users, roomName) => {
-        if (roomName && roomName !== '') {
-          const usersArray = Array.from(users);
-          availableRooms[roomName] = usersArray as string[];
-        }
-      });
+  setGameStateToPlay(roomId : string){
+    const room = this.rooms.get(roomId);
+    if (room && room.game) {
+      room.game.isLaunch = true;
+    } else {
+      throw new Error(`Room or game not found for roomId: ${roomId}`);
     }
-
-    return availableRooms;
   }
 
+
+  playGame(roomId: string) {
+    const room = this.rooms.get(roomId);
+    if (room && room.game) {
+      const actualQuestionIndex = room.game.actualQuestionIndex + 1;
+      room.game.actualQuestionIndex = actualQuestionIndex;
+      return room.game.questions[actualQuestionIndex];
+    } else {
+      throw new Error(`Room or game not found for roomId: ${roomId}`);
+    }
+  }
 }

@@ -75,14 +75,14 @@ export class SocketGateway {
         const roomId = arg;
         this.roomService.setGameStateToPlay(roomId);
         this.server.to(roomId).emit('game-started');
-        console.log(this.roomService.rooms)
       });
 
-      client.on('ready-to-play', (arg) => {
+      client.on('ask-question', (arg) => {
         const roomId = arg;
         const question = this.roomService.playGame(roomId);
         this.server.to(roomId).emit('question', question);
       });
+
   }
 
   handleDisconnect(client: Socket) {

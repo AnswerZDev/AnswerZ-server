@@ -39,6 +39,7 @@ export class Game {
         }) as unknown as Answer[];
     }
 
+    
     private initAnswers(data: string[]): Map<string, number> {
         let map: Map<string, number> = new Map<string, number>();
 

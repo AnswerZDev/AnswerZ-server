@@ -76,6 +76,11 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       });
 
       console.log(answer.answers)
+
+      this.server.to(client.id).emit('question-stats', {
+        question: arg.question,
+        answers: answer.answers
+      });
     });
 
   

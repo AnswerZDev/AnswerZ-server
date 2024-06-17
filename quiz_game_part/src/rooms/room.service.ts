@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { Game } from 'src/Models/Game';
+import { Question } from 'src/Models/Question';
 
 @Injectable()
 export class RoomService {
@@ -18,7 +19,7 @@ export class RoomService {
         room.clients.push(client.id);
         room.users.push(userUid);
         if (game) {
-          room.game = game;
+          room.game = new Game(userUid);
           room.game.nOfActualPlayers += 1;
         }
         client.join(roomId);
@@ -30,7 +31,6 @@ export class RoomService {
     }
   }
   
-
 
   joinRoom(roomId: string, client: Socket,  userUid: string = null): void {
     try {
@@ -45,8 +45,6 @@ export class RoomService {
           }
           room.game.nOfActualPlayers += 1;
           client.join(roomId);
-          console.log(this.rooms);
-
         } else {
           throw new Error('La salle existe mais n\'a pas pu être récupérée.');
         }

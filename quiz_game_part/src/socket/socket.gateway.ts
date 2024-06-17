@@ -1,7 +1,7 @@
 import { WebSocketGateway, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { RoomService } from '../rooms/room.service';
-import { Game } from 'src/Models/Game';
+import { Answer, Game } from 'src/Models/Game';
 
 @WebSocketGateway({ cors: true })
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -63,6 +63,24 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.server.to(client.id).emit('next-question', question);
     })
 
+    
+    client.on('response-answer', (arg) => {
+      const room = this.roomService.rooms.get(arg.roomId);
+  
+      const answer: Answer = room.game.answers.find((answer) => {
+          return answer.question === arg.question;
+      });
+
+  
+      Object.values(arg.answers).forEach((answerSelected: string)=> {
+        answer.answers[answerSelected.toString()] += 1;
+        
+        console.log(answer.answers)
+      });
+
+    });
+
+  
     client.on('start-game', async (roomId: string) => {
       this.roomService.setGameStateToPlay(roomId);
       this.server.to(roomId).emit('game-started');
@@ -80,12 +98,11 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     
     this.server.to(roomId).emit('next-question', question);
     
-    console.log(question)
-
     await new Promise<void>(resolve => {
       setTimeout(() => {
+        this.server.to(roomId).emit('ask-answer', question);
         resolve();
-      }, 3000);
+      }, 1000);
     });
   }
 

@@ -70,14 +70,12 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const answer: Answer = room.game.answers.find((answer) => {
           return answer.question === arg.question;
       });
-
   
       Object.values(arg.answers).forEach((answerSelected: string)=> {
         answer.answers[answerSelected.toString()] += 1;
-        
-        console.log(answer.answers)
       });
 
+      console.log(answer.answers)
     });
 
   
@@ -102,7 +100,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       setTimeout(() => {
         this.server.to(roomId).emit('ask-answer', question);
         resolve();
-      }, 1000);
+      }, 10000);
     });
   }
 

@@ -26,8 +26,9 @@ export class Game {
         this.maxPlayers = maxPlayers;
 
         this.questions = [
-            { question: 'En quelle année a eu lieu la 1ère Guerre mondiale ?', answers: ['39-45', '13-16', '14-18', 'test'] },
-            { question: 'testQuestion2',answers: ['39-43', 'test', '14-18', 'test'] }
+            { question: 'En quelle année a eu lieu la 1ère Guerre mondiale ?', answers: ['39-45', '13-16', '14-18', 'trytyru'] },
+            { question: 'testQuestion2',answers: ['39-43', 'test', '14-17', 'test3'] },
+            { question: 'testQuestion3',answers: ['39-44', 'test5', '14-20', 'test6'] }
         ];
 
         this.answers = this.questions.map((question) => {

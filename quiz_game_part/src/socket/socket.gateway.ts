@@ -75,8 +75,6 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
         answer.answers[answerSelected.toString()] += 1;
       });
 
-      console.log(answer.answers)
-
       this.server.to(client.id).emit('question-stats', {
         question: arg.question,
         answers: answer.answers
@@ -90,13 +88,13 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
       const nbrQuestions = this.roomService.getNumberOfQuestions(roomId);
       for (this.actualQuestionIndex; this.actualQuestionIndex <= nbrQuestions - 1; this.actualQuestionIndex++) {
-        await this.askQuestion(roomId, this.actualQuestionIndex);
+        await this.askQuestionAndShowStats(roomId, this.actualQuestionIndex);
       }
     });
 
   }
 
-  async askQuestion(roomId: string, questionNumber: number) {
+  async askQuestionAndShowStats(roomId: string, questionNumber: number) {
     const question = this.roomService.getQuestion(roomId, questionNumber);
     
     this.server.to(roomId).emit('next-question', question);
@@ -105,7 +103,19 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       setTimeout(() => {
         this.server.to(roomId).emit('ask-answer', question);
         resolve();
-      }, 10000);
+      }, 10000); // Temps pour répondre à la question
+    });
+
+    await new Promise<void>(resolve => {
+      setTimeout(() => {
+        const room = this.roomService.rooms.get(roomId);
+        const answer = room.game.answers.find((a: Answer) => a.question === question.question);
+        this.server.to(roomId).emit('question-stats', {
+          question: question.question,
+          answers: answer.answers
+        });
+        resolve();
+      }, 5000); // Temps pour afficher les statistiques
     });
   }
 

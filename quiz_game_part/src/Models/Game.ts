@@ -2,7 +2,7 @@ import { Question } from "./Question";
 
 export interface Answer {
     question: string;
-    answers: Map<string, number>
+    answers: { [key: string]: number };
 }
 
 
@@ -40,14 +40,14 @@ export class Game {
     }
 
     
-    private initAnswers(data: string[]): Map<string, number> {
-        let map: Map<string, number> = new Map<string, number>();
-
+    private initAnswers(data: string[]): { [key: string]: number } {
+        let obj: { [key: string]: number } = {};
+    
         data.forEach(element => {
-            map[element] = 0;
+          obj[element] = 0;
         });
-
-        return map;
+    
+        return obj;
     }
 
     join(playerId: string): boolean {

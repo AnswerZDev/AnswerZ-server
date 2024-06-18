@@ -33,7 +33,7 @@ async function bootstrap() {
         credentials: true,
     }));
 
-    app.use(express.static('public'));
+    app.use(express.static('flashcards_Part/public'));
 
     await app.listen(3100);
 }

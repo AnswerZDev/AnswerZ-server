@@ -13,7 +13,7 @@ export class QuizService {
     ) {}
     
 
-    public create(quizDto: QuizDto): void {
-        this._quizRepository.save(quizDto);
+    public async create(quizDto: QuizDto): Promise<Quiz> {
+        return await this._quizRepository.save(quizDto);
     }
 }

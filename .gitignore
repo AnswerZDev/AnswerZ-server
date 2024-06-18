@@ -139,4 +139,4 @@ node_modules
 
 /public/*
 
-/quiz_game_part/googleAuth.json
+quiz_game_part/googleAuth.json

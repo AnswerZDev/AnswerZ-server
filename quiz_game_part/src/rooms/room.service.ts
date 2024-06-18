@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { Game } from 'src/Models/Game';
-import { SocketService } from 'src/socket/socket.service';
+import { Question } from 'src/Models/Question';
 
 @Injectable()
 export class RoomService {
@@ -19,11 +19,10 @@ export class RoomService {
         room.clients.push(client.id);
         room.users.push(userUid);
         if (game) {
-          room.game = game;
+          room.game = new Game(userUid);
           room.game.nOfActualPlayers += 1;
         }
         client.join(roomId);
-        console.log(this.rooms);
       } else {
         throw new Error(`Impossible de récupérer la salle après sa création. ID de salle : ${roomId}`);
       }
@@ -33,7 +32,6 @@ export class RoomService {
   }
   
 
-
   joinRoom(roomId: string, client: Socket,  userUid: string = null): void {
     try {
       if (this.rooms.has(roomId)) {
@@ -41,11 +39,12 @@ export class RoomService {
         if (room) {          
           if(client.id){
             room.clients.push(client.id);
+            if(userUid){
+              room.users.push(userUid);
+            }
           }
           room.game.nOfActualPlayers += 1;
           client.join(roomId);
-          console.log(this.rooms);
-
         } else {
           throw new Error('La salle existe mais n\'a pas pu être récupérée.');
         }
@@ -74,11 +73,7 @@ export class RoomService {
         }
     }
     return null;
-}
-
-
-
-
+  }
 
   getRoomInfo(roomId: string): any {
     if (this.rooms.has(roomId)) {
@@ -89,36 +84,47 @@ export class RoomService {
   }
 
   leaveRoom(roomId: string, client: Socket): void {
+
     if (this.rooms.has(roomId)) {
       const room = this.rooms.get(roomId);
       const index = room.clients.indexOf(client.id);
-      if (index !== -1) {
+      if (index!== -1) {
         room.clients.splice(index, 1);
+        room.users.splice(index, 1);
         room.game.nOfActualPlayers -= 1;
+  
         if (room.clients.length === 0) {
           this.rooms.delete(roomId);
         }
       }
     }
-    console.log(this.rooms);
   }
 
-  static getAvailableRooms(server: Server): Record<string, string[]> {
-    const adapter = server.sockets.adapter;
-    const rooms = adapter.rooms;
-
-    const availableRooms: Record<string, string[]> = {};
-
-    if (rooms) {
-      rooms.forEach((users, roomName) => {
-        if (roomName && roomName !== '') {
-          const usersArray = Array.from(users);
-          availableRooms[roomName] = usersArray as string[];
-        }
-      });
+  setGameStateToPlay(roomId : string){
+    const room = this.rooms.get(roomId);
+    if (room && room.game) {
+      room.game.isLaunch = true;
+    } else {
+      throw new Error(`Room or game not found for roomId: ${roomId}`);
     }
-
-    return availableRooms;
   }
 
+  getNumberOfQuestions(roomId: string){
+    return this.rooms.get(roomId).game.questions.length;
+  }
+
+  getQuestion(roomId : string, questionNumber : number){
+    return this.rooms.get(roomId).game.questions[questionNumber];
+  }
+
+
+  playGame(roomId: string) {
+    const room = this.rooms.get(roomId);
+    if (room && room.game) {
+      const actualQuestionIndex = room.game.actualQuestionIndex;
+      return room.game.questions[actualQuestionIndex];
+    } else {
+      throw new Error(`Room or game not found for roomId: ${roomId}`);
+    }
+  }
 }

@@ -1,4 +1,3 @@
-import { HttpService } from '@nestjs/axios';
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiTags} from "@nestjs/swagger";
 import { QuizService } from './quiz.service';

@@ -14,7 +14,7 @@ export class Quiz {
     @Column({name: "description", length: 255, nullable: true})
     private description: string;
 
-    @Column({name: "maxPlayers", length: 255, nullable: true})
+    @Column({name: "maxPlayers", nullable: true})
     private maxPlayers: number;
 
     @Column({name: "visibility", length: 255, nullable: true})

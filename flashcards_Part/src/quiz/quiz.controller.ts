@@ -1,4 +1,4 @@
-import {Body, Controller, Post, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
+import {Body, Controller, Get, Post, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {QuizService} from './quiz.service';
 import {QuizDto} from "./dto/quiz.dto";
@@ -59,5 +59,13 @@ export class QuizController {
         },
     }))
     async uploadProfilePhoto(@UploadedFile() photoProfile: Express.Multer.File, @Req() req: any) {
+    }
+
+    @ApiBearerAuth('access-token')
+    @Get(':idQuiz')
+    public async getQuizById(@Req() req: any): Promise<any> {
+        let quiz: any = await this._quizService.getQuizById(req.params.idQuiz);
+        quiz.image = await this._quizService.getUrlQuizPicture(req.user.uid, quiz.quizPicture, req.params.idQuiz);
+        return quiz;
     }
 }

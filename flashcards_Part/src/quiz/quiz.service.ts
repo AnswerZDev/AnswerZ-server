@@ -16,4 +16,16 @@ export class QuizService {
     public async create(quizDto: QuizDto): Promise<Quiz> {
         return await this._quizRepository.save(quizDto);
     }
+
+    public async getQuizById(quizId: string): Promise<Quiz> {
+        return await this._quizRepository.findOne({
+            where: {
+                id: quizId
+            }
+        });
+    }
+
+    public async getUrlQuizPicture(idUser: string, photoName: string, idQuiz: string): Promise<string> {
+        return `http://localhost:3000/public/users/${idUser}/quizs/${idQuiz}/quiz-picture/${photoName}`;
+    }
 }

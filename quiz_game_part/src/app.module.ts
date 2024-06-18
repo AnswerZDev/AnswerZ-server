@@ -5,11 +5,13 @@ import {SocketModule} from './socket/socket.module';
 import {QuizModule} from './quiz/quiz.module';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {ConfigModule} from '@nestjs/config';
+import {QuestionModule} from "./question/question.module";
 
 @Module({
     imports: [
         SocketModule,
         QuizModule,
+        QuestionModule,
         ConfigModule.forRoot({
             isGlobal: true,
         }),

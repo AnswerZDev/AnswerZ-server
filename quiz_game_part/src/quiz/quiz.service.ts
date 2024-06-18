@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { QuizDto } from './quiz.dto';
+import {QuizDto} from "./dto/quiz.dto";
 
 @Injectable()
 export class QuizService {

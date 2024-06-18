@@ -74,6 +74,8 @@ web_modules/
 
 # dotenv environment variable files
 flashcards_Part/.env
+quiz_game_part/.env
+.env
 .env.development.local
 .env.test.local
 .env.production.local
@@ -140,3 +142,10 @@ node_modules
 /public/*
 
 quiz_game_part/googleAuth.json
+
+/googleAuth.json
+
+/public/*
+
+
+data/

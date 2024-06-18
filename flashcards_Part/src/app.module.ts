@@ -19,6 +19,7 @@ import { join } from 'path';
     CardsetModule,
     FlashcardModule,
     AccessControlModule,
+    SharedModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),

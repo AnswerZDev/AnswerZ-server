@@ -5,7 +5,9 @@ import { QuizDto } from './quiz.dto';
 @Injectable()
 export class QuizService {
 
-    public constructor() {}
+    public constructor(
+        
+    ) {}
     
 
     public create(quizDto: QuizDto): void {

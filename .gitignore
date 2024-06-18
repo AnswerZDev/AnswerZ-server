@@ -138,3 +138,5 @@ node_modules
 /flashcards_Part/googleAuth.json
 
 /public/*
+
+/quiz_game_part/googleAuth.json

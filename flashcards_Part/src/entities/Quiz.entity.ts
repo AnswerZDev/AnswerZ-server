@@ -31,5 +31,4 @@ export class Quiz {
     @ManyToOne(() => User, "quizs")
     @JoinColumn({ name: "authorId", referencedColumnName: "id" })
     private author: User;
-
 }

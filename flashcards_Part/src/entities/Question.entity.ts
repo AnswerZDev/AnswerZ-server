@@ -1,5 +1,6 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 import {QuestionTypeEnum} from "../enum/question-type.enum";
+import {Quiz} from "./Quiz.entity";
 
 @Entity()
 export class Question {
@@ -20,4 +21,8 @@ export class Question {
 
     @Column({ name: "choices" })
     private choices: string;
+
+    @ManyToOne(() => Quiz, 'questions')
+    @JoinColumn({ name: "quizId", referencedColumnName: "id" })
+    private quiz: Quiz;
 }

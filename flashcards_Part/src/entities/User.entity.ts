@@ -2,6 +2,7 @@ import {Column, Entity, JoinColumn, OneToMany} from "typeorm";
 import {Cardset} from "./Cardset.entity";
 import {AccessControl} from "./AccessControl.entity";
 import {Role} from "../enum/role.enum";
+import {Quiz} from "./Quiz.entity";
 
 @Entity()
 export class User {
@@ -10,6 +11,9 @@ export class User {
 
     @OneToMany(() => Cardset, "author")
     private cardsets: Cardset[];
+
+    @OneToMany(() => Cardset, "author")
+    private quizs: Quiz[];
 
     @OneToMany(() => Cardset, "user")
     private accessControls: AccessControl[];
@@ -51,6 +55,14 @@ export class User {
 
     public setProfilePicture(profilePicture: string): void {
         this.profilePicture = profilePicture;
+    }
+
+    public getQuizs(): Quiz[] {
+        return this.quizs;
+    }
+
+    public setQuizs(quizs: Quiz[]): void {
+        this.quizs = quizs;
     }
 
 }

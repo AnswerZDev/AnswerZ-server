@@ -1,8 +1,10 @@
-import {Column, Entity} from "typeorm";
+import {Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Question} from "./Question.entity";
+import {User} from "./User.entity";
 
 @Entity()
 export class Quiz {
-    @Column({name: "UserFirebaseId", primary: true, length: 255})
+    @PrimaryGeneratedColumn({name: "idQuiz"})
     private id: string;
 
     @Column({name: "quizPicture", length: 255, nullable: true})
@@ -22,5 +24,12 @@ export class Quiz {
 
     @Column({name: "category", length: 255, nullable: true})
     private category: string;
+
+    @OneToMany(() => Question, "quiz")
+    private questions: Question[];
+
+    @ManyToOne(() => User, "quizs")
+    @JoinColumn({ name: "authorId", referencedColumnName: "id" })
+    private author: User;
 
 }

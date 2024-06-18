@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty } from 'class-validator';
+import {User} from "../../entities/User.entity";
 
 export class QuizDto {
   @IsNotEmpty()
@@ -25,4 +26,7 @@ export class QuizDto {
   @IsNotEmpty()
   @ApiProperty()
   readonly category: string;
+
+  @ApiProperty()
+  author: User;
 }

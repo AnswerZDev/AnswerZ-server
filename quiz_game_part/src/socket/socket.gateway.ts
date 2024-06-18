@@ -32,9 +32,11 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     });
 
     client.on('create-game', (roomId: string, user: { uid: string }) => {
-      const game = new Game(user.uid);
-      this.roomService.createRoom(roomId, client, game, user.uid);
-      this.server.emit('roomCreated', roomId);
+      if(user){
+        const game = new Game(user.uid);
+        this.roomService.createRoom(roomId, client, game, user.uid);
+        this.server.emit('roomCreated', roomId);
+      }
     });
 
     client.on('join-game', (roomId: string, user: { uid: string }) => {
@@ -103,24 +105,29 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       setTimeout(() => {
         this.server.to(roomId).emit('ask-answer', question);
         resolve();
-      }, 10000); // Temps pour répondre à la question
+      }, 10000);
     });
 
     await new Promise<void>(resolve => {
       setTimeout(() => {
         const room = this.roomService.rooms.get(roomId);
-        const answer = room.game.answers.find((a: Answer) => a.question === question.question);
-        this.server.to(roomId).emit('question-stats', {
-          question: question.question,
-          answers: answer.answers
-        });
-        resolve();
-      }, 5000); // Temps pour afficher les statistiques
+        if(room){
+          if(room.game){
+            const answer = room.game.answers.find((a: Answer) => a.question === question.question);
+            this.server.to(roomId).emit('question-stats', {
+              question: question.question,
+              answers: answer.answers
+            });
+            resolve();
+          }
+        }
+      }, 5000);
     });
   }
 
   handleDisconnect(client: Socket) {
     console.log("user disconnected");
+
   }
 
   isClientAlreadyInRooms(userUid: string): string {

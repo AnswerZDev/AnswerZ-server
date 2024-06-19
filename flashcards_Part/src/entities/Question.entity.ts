@@ -25,4 +25,12 @@ export class Question {
     @ManyToOne(() => Quiz, 'questions', { onDelete: 'CASCADE' })
     @JoinColumn({ name: "quizId", referencedColumnName: "id" })
     private quiz: Quiz;
+
+    public getDescription(): string {
+        return this.description;
+    }
+
+    public getChoices(): string {
+        return this.choices;
+    }
 }

@@ -2,13 +2,16 @@ import {OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway, WebSocketSer
 import {Server, Socket} from 'socket.io';
 import {RoomService} from '../rooms/room.service';
 import {Answer, Game} from 'src/Models/Game';
+import {Question} from "../Models/Question";
 
 @WebSocketGateway({cors: true})
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer() server: Server;
     actualQuestionIndex: number = 0;
 
-    constructor(private readonly roomService: RoomService) {
+    constructor(
+        private readonly roomService: RoomService,
+    ) {
     }
 
     handleConnection(client: Socket) {
@@ -32,9 +35,10 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
             }
         });
 
-        client.on('create-game', (roomId: string, user: { uid: string }) => {
+        client.on('create-game', async (roomId: string, user: { uid: string }, questionsData: any[]) => {
             if (user) {
-                const game = new Game(user.uid);
+                const questions: Question[] = this.initQuestions(questionsData);
+                let game = new Game(user.uid, questions);
                 this.roomService.createRoom(roomId, client, game, user.uid);
                 this.server.emit('roomCreated', roomId);
             }
@@ -139,5 +143,14 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     isClientAlreadyInRooms(userUid: string): string {
         return this.roomService.isClientAlreadyInRoom(userUid);
+    }
+
+    private initQuestions(questions: any[]): Question[] {
+        return questions.map((question) => {
+            return {
+                question: question._description,
+                answers: question._choices.split(","),
+            };
+        }) as unknown as Question[]
     }
 }

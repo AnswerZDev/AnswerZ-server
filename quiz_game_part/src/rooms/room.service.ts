@@ -19,7 +19,7 @@ export class RoomService {
         room.clients.push(client.id);
         room.users.push(userUid);
         if (game) {
-          room.game = new Game(userUid);
+          room.game = new Game(userUid, game.questions);
           room.game.nOfActualPlayers += 1;
         }
         client.join(roomId);

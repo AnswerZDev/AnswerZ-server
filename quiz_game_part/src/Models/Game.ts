@@ -21,15 +21,10 @@ export class Game {
     
     answers: Answer[];
 
-    constructor(host, { maxPlayers = 5 }: { maxPlayers?: number } = {}) {
+    constructor(host, questions: Question[] = [], { maxPlayers = 5 }: { maxPlayers?: number } = {}) {
         this.host = host
         this.maxPlayers = maxPlayers;
-
-        this.questions = [
-            { question: 'En quelle année a eu lieu la 1ère Guerre mondiale ?', answers: ['39-45', '13-16', '14-18', 'trytyru'] },
-            { question: 'testQuestion2',answers: ['39-43', 'test', '14-17', 'test3'] },
-            { question: 'testQuestion3',answers: ['39-44', 'test5', '14-20', 'test6'] }
-        ];
+        this.questions = questions;
 
         this.answers = this.questions.map((question) => {
             let answer: Answer = {

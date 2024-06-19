@@ -32,7 +32,8 @@ export class QuizModule implements NestModule {
             .forRoutes(
                 '/quiz/create-quiz',
                 '/quiz/upload-image-quiz',
-                '/quiz/:idQuiz'
+                '/quiz/:idQuiz',
+                '/quiz/private'
             );
     }
 }

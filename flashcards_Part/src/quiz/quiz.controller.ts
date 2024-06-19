@@ -68,4 +68,17 @@ export class QuizController {
         quiz.image = await this._quizService.getUrlQuizPicture(req.user.uid, quiz.quizPicture, req.params.idQuiz);
         return quiz;
     }
+
+    @Get('public/all')
+    public async getAllPublicQuiz(@Req() req: any): Promise<any> {
+        let quizs: Quiz[] = await this._quizService.getAllPublicQuizzes();
+        return await this._quizService.initQuizPictures(quizs);
+    }
+
+    @ApiBearerAuth('access-token')
+    @Get('private/all')
+    public async getAllPrivateQuiz(@Req() req: any): Promise<any> {
+        let quizs: Quiz[] = await this._quizService.getPrivateQuizByAuthorId(req.user.uid);
+        return await this._quizService.initQuizPictures(quizs);
+    }
 }

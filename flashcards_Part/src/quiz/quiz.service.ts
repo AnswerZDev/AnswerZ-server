@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {QuizDto} from "./dto/quiz.dto";
 import {Quiz} from "../entities/Quiz.entity";
 import {InjectRepository} from "@nestjs/typeorm";
@@ -10,8 +10,9 @@ export class QuizService {
     public constructor(
         @InjectRepository(Quiz)
         private readonly _quizRepository: Repository<Quiz>
-    ) {}
-    
+    ) {
+    }
+
 
     public async create(quizDto: QuizDto): Promise<Quiz> {
         return await this._quizRepository.save(quizDto);
@@ -26,7 +27,35 @@ export class QuizService {
         });
     }
 
-    public async getUrlQuizPicture(idUser: string, photoName: string, idQuiz: string): Promise<string> {
+    public getUrlQuizPicture(idUser: string, photoName: string, idQuiz: string): string {
         return `http://localhost:3000/public/users/${idUser}/quizs/${idQuiz}/quiz-picture/${photoName}`;
+    }
+
+    public async getAllPublicQuizzes(): Promise<Quiz[]> {
+        return await this._quizRepository.find({
+            where: {
+                visibility: 'Public'
+            },
+            relations: ['author']
+        });
+    }
+
+    public async getPrivateQuizByAuthorId(authorId: string): Promise<Quiz[]> {
+        return await this._quizRepository.find({
+            where: {
+                author: {
+                    id: authorId
+                },
+                visibility: 'Private'
+            },
+            relations: ['author']
+        });
+    }
+
+    public async initQuizPictures(quizs: any[]): Promise<Quiz[]> {
+        return quizs.map(quiz => {
+            quiz.image = this.getUrlQuizPicture(quiz.author.getId(), quiz.quizPicture, quiz.id);
+            return quiz;
+        });
     }
 }

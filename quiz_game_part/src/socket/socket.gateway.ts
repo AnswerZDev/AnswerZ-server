@@ -92,6 +92,8 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       for (this.actualQuestionIndex; this.actualQuestionIndex <= nbrQuestions - 1; this.actualQuestionIndex++) {
         await this.askQuestionAndShowStats(roomId, this.actualQuestionIndex);
       }
+
+      this.server.to(roomId).emit('game-ended');
     });
 
   }

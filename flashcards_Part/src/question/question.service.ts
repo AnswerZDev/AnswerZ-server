@@ -12,7 +12,7 @@ export class QuestionService {
     ) {
     }
 
-    public createQuestion(questionDto: QuestionDto): Promise<Question> {
+    public createQuestion(questionDto: any): Promise<Question> {
         return this.questionRepository.save(questionDto);
     }
 

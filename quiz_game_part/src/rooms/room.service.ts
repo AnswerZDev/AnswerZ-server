@@ -84,7 +84,6 @@ export class RoomService {
   }
 
   leaveRoom(roomId: string, client: Socket): void {
-
     if (this.rooms.has(roomId)) {
       const room = this.rooms.get(roomId);
       const index = room.clients.indexOf(client.id);
@@ -114,7 +113,8 @@ export class RoomService {
   }
 
   getQuestion(roomId : string, questionNumber : number){
-    return this.rooms.get(roomId).game.questions[questionNumber];
+    if(this.rooms.get(roomId))
+      return this.rooms.get(roomId).game.questions[questionNumber];
   }
 
 

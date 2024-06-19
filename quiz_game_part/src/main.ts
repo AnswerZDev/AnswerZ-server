@@ -1,4 +1,4 @@
-import {NestFactory} from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import {AppModule} from './app.module';
 import * as cors from 'cors';
 import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';

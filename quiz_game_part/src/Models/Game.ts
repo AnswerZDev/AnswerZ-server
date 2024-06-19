@@ -2,7 +2,7 @@ import { Question } from "./Question";
 
 export interface Answer {
     question: string;
-    answers: Map<string, number>
+    answers: { [key: string]: number };
 }
 
 
@@ -26,8 +26,9 @@ export class Game {
         this.maxPlayers = maxPlayers;
 
         this.questions = [
-            { question: 'En quelle année a eu lieu la 1ère Guerre mondiale ?', answers: ['39-45', '13-16', '14-18', 'test'] },
-            { question: 'testQuestion2',answers: ['39-43', 'test', '14-18', 'test'] }
+            { question: 'En quelle année a eu lieu la 1ère Guerre mondiale ?', answers: ['39-45', '13-16', '14-18', 'trytyru'] },
+            { question: 'testQuestion2',answers: ['39-43', 'test', '14-17', 'test3'] },
+            { question: 'testQuestion3',answers: ['39-44', 'test5', '14-20', 'test6'] }
         ];
 
         this.answers = this.questions.map((question) => {
@@ -40,14 +41,14 @@ export class Game {
     }
 
     
-    private initAnswers(data: string[]): Map<string, number> {
-        let map: Map<string, number> = new Map<string, number>();
+    private initAnswers(data: string[]): { [key: string]: number } {
+        let obj: { [key: string]: number } = {};
 
         data.forEach(element => {
-            map[element] = 0;
+          obj[element] = 0;
         });
 
-        return map;
+        return obj;
     }
 
     join(playerId: string): boolean {

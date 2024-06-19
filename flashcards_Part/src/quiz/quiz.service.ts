@@ -65,4 +65,15 @@ export class QuizService {
             return datas;
         }
     }
+
+    public async updateQuiz(idQuiz: string, quizDto: QuizDto): Promise<Quiz> {
+        this._quizRepository.update(idQuiz, quizDto)
+        let quiz: any = await this._quizRepository.findOne({
+            where: {
+                id: idQuiz
+            }
+        });
+        quiz.image = this.getUrlQuizPicture(quiz.author.getId(), quiz.quizPicture, quiz.id);
+        return quiz;
+    }
 }

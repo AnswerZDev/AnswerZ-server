@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Post, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {QuizService} from './quiz.service';
 import {QuizDto} from "./dto/quiz.dto";
@@ -80,6 +80,11 @@ export class QuizController {
     public async getAllPrivateQuiz(@Req() req: any): Promise<any> {
         let quizs: Quiz[] = await this._quizService.getPrivateQuizByAuthorId(req.user.uid);
         return await this._quizService.initQuizPictures(quizs);
+    }
+
+    @Patch('update-quiz/:idQuiz')
+    public async updateQuiz(@Body() quizDto: QuizDto, @Param('idQuiz') idQuiz: string): Promise<Quiz> {
+        return await this._quizService.updateQuiz(idQuiz, quizDto);
     }
 
     @ApiBearerAuth('access-token')

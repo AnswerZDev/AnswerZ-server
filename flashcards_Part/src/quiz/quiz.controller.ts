@@ -9,7 +9,7 @@ import {diskStorage} from "multer";
 import * as path from 'path';
 import * as fs from 'fs';
 import {Quiz} from "../entities/Quiz.entity";
-import {Patch} from "@nestjs/common/decorators";
+import {Delete, Patch} from "@nestjs/common/decorators";
 
 @ApiTags("Quiz endpoints")
 @Controller('quiz')
@@ -81,4 +81,11 @@ export class QuizController {
         let quizs: Quiz[] = await this._quizService.getPrivateQuizByAuthorId(req.user.uid);
         return await this._quizService.initQuizPictures(quizs);
     }
+
+    @ApiBearerAuth('access-token')
+    @Delete(':idQuiz')
+    public async deleteQuizById(@Req() req: any): Promise<any> {
+        let quiz: any = await this._quizService.deleteQuizById(req.params.idQuiz);
+    }
+
 }

@@ -22,7 +22,7 @@ export class Question {
     @Column({ name: "choices" })
     private choices: string;
 
-    @ManyToOne(() => Quiz, 'questions')
+    @ManyToOne(() => Quiz, 'questions', { onDelete: 'CASCADE' })
     @JoinColumn({ name: "quizId", referencedColumnName: "id" })
     private quiz: Quiz;
 }

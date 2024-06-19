@@ -58,4 +58,11 @@ export class QuizService {
             return quiz;
         });
     }
+
+    public async deleteQuizById(quizId: string): Promise<any> {
+        if (quizId !== undefined && quizId !== null) {
+            const datas = await this._quizRepository.delete(quizId);
+            return datas;
+        }
+    }
 }

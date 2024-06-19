@@ -89,6 +89,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.server.to(roomId).emit('game-started');
 
       const nbrQuestions = this.roomService.getNumberOfQuestions(roomId);
+
       for (this.actualQuestionIndex; this.actualQuestionIndex <= nbrQuestions - 1; this.actualQuestionIndex++) {
         await this.askQuestionAndShowStats(roomId, this.actualQuestionIndex);
       }
@@ -100,9 +101,13 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   async askQuestionAndShowStats(roomId: string, questionNumber: number) {
     const question = this.roomService.getQuestion(roomId, questionNumber);
+    const questionTotal = this.roomService.getNumberOfQuestions(roomId);
     
     this.server.to(roomId).emit('next-question', question);
-    
+
+    this.server.to(roomId).emit('question-infos', { questionNumber, questionTotal });
+
+
     await new Promise<void>(resolve => {
       setTimeout(() => {
         this.server.to(roomId).emit('ask-answer', question); 

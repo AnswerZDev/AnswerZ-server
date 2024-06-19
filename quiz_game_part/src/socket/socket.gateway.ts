@@ -105,9 +105,9 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     
     await new Promise<void>(resolve => {
       setTimeout(() => {
-        this.server.to(roomId).emit('ask-answer', question);
+        this.server.to(roomId).emit('ask-answer', question); 
         resolve();
-      }, 10000);
+      }, 30000);
     });
 
     await new Promise<void>(resolve => {
@@ -123,7 +123,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
             resolve();
           }
         }
-      }, 5000);
+      }, 5000); 
     });
   }
 
